@@ -556,6 +556,31 @@ paths:
           description: Bad request.
           schema:
             $ref: '#/definitions/ErrorResponse'
+  /containers/{containerId}/storagegroups:
+    parameters:
+      - $ref: '#/parameters/containerId'
+    put:
+      operationId: putStorageGroup
+      summary: Create a new storage group in container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+        - in: body
+          name: storageGroup
+          required: true
+          description: Storage group co create.
+          schema:
+            $ref: '#/definitions/StorageGroup'
+      responses:
+        200:
+          description: Address of uploaded storage group.
+          schema:
+            $ref: '#/definitions/Address'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 
 definitions:
   BinaryBearer:
@@ -1030,6 +1055,32 @@ definitions:
               value: myfile
           targets:
             - role: OTHERS
+  StorageGroup:
+    description: Storage group keeps verification information for Data Audit sessions.
+    type: object
+    properties:
+      name:
+        description: Name of storage group. It will be the value of the `FileName` attribute in storage group object.
+        type: string
+      containerId:
+        description: Container id to which storage group is belong. Set by server.
+        type: string
+        readOnly: true
+      objectId:
+        description: Object id of storage group. Set by server.
+        type: string
+        readOnly: true
+      lifetime:
+        description: Lifetime in epochs for storage group.
+        type: integer
+      members:
+        description: Object identifiers to be placed into storage group. Must be unique.
+        type: array
+        items:
+          type: string
+    required:
+      - lifetime
+      - members
   Attribute:
     description: Attribute is a pair of strings that can be attached to a container or an object.
     type: object

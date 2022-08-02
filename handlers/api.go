@@ -126,6 +126,8 @@ func (a *API) Configure(api *operations.FrostfsRestGwAPI) http.Handler {
 	api.OptionsContainersEACLHandler = operations.OptionsContainersEACLHandlerFunc(a.OptionsContainersEACL)
 	api.PutContainerEACLHandler = operations.PutContainerEACLHandlerFunc(a.PutContainerEACL)
 	api.GetContainerEACLHandler = operations.GetContainerEACLHandlerFunc(a.GetContainerEACL)
+	api.ListContainersHandler = operations.ListContainersHandlerFunc(a.ListContainer)
+	api.PutStorageGroupHandler = operations.PutStorageGroupHandlerFunc(a.PutStorageGroup)
 
 	api.BearerAuthAuth = func(s string) (*models.Principal, error) {
 		if !strings.HasPrefix(s, BearerPrefix) {

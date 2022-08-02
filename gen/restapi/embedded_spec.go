@@ -523,6 +523,51 @@ func init() {
         }
       ]
     },
+    "/containers/{containerId}/storagegroups": {
+      "put": {
+        "summary": "Create a new storage group in container.",
+        "operationId": "putStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "description": "Storage group co create.",
+            "name": "storageGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address of uploaded storage group.",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/containerId"
+        }
+      ]
+    },
     "/objects": {
       "put": {
         "consumes": [
@@ -1522,6 +1567,41 @@ func init() {
         "MatchCommonPrefix"
       ]
     },
+    "StorageGroup": {
+      "description": "Storage group keeps verification information for Data Audit sessions.",
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "containerId": {
+          "description": "Container id to which storage group is belong. Set by server.",
+          "type": "string",
+          "readOnly": true
+        },
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        },
+        "objectId": {
+          "description": "Object id of storage group. Set by server.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
+    },
     "SuccessResponse": {
       "description": "Success response.",
       "type": "object",
@@ -2206,6 +2286,67 @@ func init() {
               "Access-Control-Allow-Origin": {
                 "type": "string"
               }
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Base58 encoded container id.",
+          "name": "containerId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups": {
+      "put": {
+        "summary": "Create a new storage group in container.",
+        "operationId": "putStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "description": "Storage group co create.",
+            "name": "storageGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address of uploaded storage group.",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
             }
           }
         }
@@ -3289,6 +3430,41 @@ func init() {
         "MatchNotPresent",
         "MatchCommonPrefix"
       ]
+    },
+    "StorageGroup": {
+      "description": "Storage group keeps verification information for Data Audit sessions.",
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "containerId": {
+          "description": "Container id to which storage group is belong. Set by server.",
+          "type": "string",
+          "readOnly": true
+        },
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        },
+        "objectId": {
+          "description": "Object id of storage group. Set by server.",
+          "type": "string",
+          "readOnly": true
+        }
+      }
     },
     "SuccessResponse": {
       "description": "Success response.",
