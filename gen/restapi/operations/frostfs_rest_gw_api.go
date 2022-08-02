@@ -53,6 +53,9 @@ func NewFrostfsRestGwAPI(spec *loads.Document) *FrostfsRestGwAPI {
 		DeleteObjectHandler: DeleteObjectHandlerFunc(func(params DeleteObjectParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation DeleteObject has not yet been implemented")
 		}),
+		DeleteStorageGroupHandler: DeleteStorageGroupHandlerFunc(func(params DeleteStorageGroupParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation DeleteStorageGroup has not yet been implemented")
+		}),
 		FormBinaryBearerHandler: FormBinaryBearerHandlerFunc(func(params FormBinaryBearerParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation FormBinaryBearer has not yet been implemented")
 		}),
@@ -67,6 +70,9 @@ func NewFrostfsRestGwAPI(spec *loads.Document) *FrostfsRestGwAPI {
 		}),
 		GetObjectInfoHandler: GetObjectInfoHandlerFunc(func(params GetObjectInfoParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation GetObjectInfo has not yet been implemented")
+		}),
+		GetStorageGroupHandler: GetStorageGroupHandlerFunc(func(params GetStorageGroupParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation GetStorageGroup has not yet been implemented")
 		}),
 		ListContainersHandler: ListContainersHandlerFunc(func(params ListContainersParams) middleware.Responder {
 			return middleware.NotImplemented("operation ListContainers has not yet been implemented")
@@ -169,6 +175,8 @@ type FrostfsRestGwAPI struct {
 	DeleteContainerHandler DeleteContainerHandler
 	// DeleteObjectHandler sets the operation handler for the delete object operation
 	DeleteObjectHandler DeleteObjectHandler
+	// DeleteStorageGroupHandler sets the operation handler for the delete storage group operation
+	DeleteStorageGroupHandler DeleteStorageGroupHandler
 	// FormBinaryBearerHandler sets the operation handler for the form binary bearer operation
 	FormBinaryBearerHandler FormBinaryBearerHandler
 	// GetBalanceHandler sets the operation handler for the get balance operation
@@ -179,6 +187,8 @@ type FrostfsRestGwAPI struct {
 	GetContainerEACLHandler GetContainerEACLHandler
 	// GetObjectInfoHandler sets the operation handler for the get object info operation
 	GetObjectInfoHandler GetObjectInfoHandler
+	// GetStorageGroupHandler sets the operation handler for the get storage group operation
+	GetStorageGroupHandler GetStorageGroupHandler
 	// ListContainersHandler sets the operation handler for the list containers operation
 	ListContainersHandler ListContainersHandler
 	// ListStorageGroupsHandler sets the operation handler for the list storage groups operation
@@ -299,6 +309,9 @@ func (o *FrostfsRestGwAPI) Validate() error {
 	if o.DeleteObjectHandler == nil {
 		unregistered = append(unregistered, "DeleteObjectHandler")
 	}
+	if o.DeleteStorageGroupHandler == nil {
+		unregistered = append(unregistered, "DeleteStorageGroupHandler")
+	}
 	if o.FormBinaryBearerHandler == nil {
 		unregistered = append(unregistered, "FormBinaryBearerHandler")
 	}
@@ -313,6 +326,9 @@ func (o *FrostfsRestGwAPI) Validate() error {
 	}
 	if o.GetObjectInfoHandler == nil {
 		unregistered = append(unregistered, "GetObjectInfoHandler")
+	}
+	if o.GetStorageGroupHandler == nil {
+		unregistered = append(unregistered, "GetStorageGroupHandler")
 	}
 	if o.ListContainersHandler == nil {
 		unregistered = append(unregistered, "ListContainersHandler")
@@ -470,6 +486,10 @@ func (o *FrostfsRestGwAPI) initHandlerCache() {
 		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/objects/{containerId}/{objectId}"] = NewDeleteObject(o.context, o.DeleteObjectHandler)
+	if o.handlers["DELETE"] == nil {
+		o.handlers["DELETE"] = make(map[string]http.Handler)
+	}
+	o.handlers["DELETE"]["/containers/{containerId}/storagegroups/{storageGroupId}"] = NewDeleteStorageGroup(o.context, o.DeleteStorageGroupHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -490,6 +510,10 @@ func (o *FrostfsRestGwAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/objects/{containerId}/{objectId}"] = NewGetObjectInfo(o.context, o.GetObjectInfoHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/containers/{containerId}/storagegroups/{storageGroupId}"] = NewGetStorageGroup(o.context, o.GetStorageGroupHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

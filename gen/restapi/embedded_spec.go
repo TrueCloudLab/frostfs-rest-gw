@@ -572,7 +572,7 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/StorageGroup"
+              "$ref": "#/definitions/StorageGroupPutBody"
             }
           }
         ],
@@ -594,6 +594,74 @@ func init() {
       "parameters": [
         {
           "$ref": "#/parameters/containerId"
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups/{storageGroupId}": {
+      "get": {
+        "summary": "Get storage group info.",
+        "operationId": "getStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Storage group information.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete storage group from container.",
+        "operationId": "deleteStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful deletion.",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/containerId"
+        },
+        {
+          "$ref": "#/parameters/storageGroupId"
         }
       ]
     },
@@ -1600,18 +1668,22 @@ func init() {
       "description": "Storage group keeps verification information for Data Audit sessions.",
       "type": "object",
       "required": [
-        "lifetime",
+        "address",
+        "expirationEpoch",
+        "size",
         "members"
       ],
       "properties": {
-        "containerId": {
-          "description": "Container id to which storage group is belong. Set by server.",
-          "type": "string",
+        "address": {
+          "description": "Address of storage group object. Set by server.",
+          "$ref": "#/definitions/Address",
           "readOnly": true
         },
-        "lifetime": {
-          "description": "Lifetime in epochs for storage group.",
-          "type": "integer"
+        "expirationEpoch": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
         },
         "members": {
           "description": "Object identifiers to be placed into storage group. Must be unique.",
@@ -1624,10 +1696,8 @@ func init() {
           "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
           "type": "string"
         },
-        "objectId": {
-          "description": "Object id of storage group. Set by server.",
-          "type": "string",
-          "readOnly": true
+        "size": {
+          "type": "string"
         }
       }
     },
@@ -1666,6 +1736,30 @@ func init() {
           "items": {
             "$ref": "#/definitions/StorageGroupBaseInfo"
           }
+        }
+      }
+    },
+    "StorageGroupPutBody": {
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
         }
       }
     },
@@ -1796,6 +1890,13 @@ func init() {
       "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
+    },
+    "storageGroupId": {
+      "type": "string",
+      "description": "Base58 encoded storage group id.",
+      "name": "storageGroupId",
+      "in": "path",
+      "required": true
     }
   },
   "securityDefinitions": {
@@ -2440,7 +2541,7 @@ func init() {
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/StorageGroup"
+              "$ref": "#/definitions/StorageGroupPutBody"
             }
           }
         ],
@@ -2464,6 +2565,106 @@ func init() {
           "type": "string",
           "description": "Base58 encoded container id.",
           "name": "containerId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups/{storageGroupId}": {
+      "get": {
+        "summary": "Get storage group info.",
+        "operationId": "getStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Storage group information.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete storage group from container.",
+        "operationId": "deleteStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header",
+            "required": true
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful deletion.",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Base58 encoded container id.",
+          "name": "containerId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "Base58 encoded storage group id.",
+          "name": "storageGroupId",
           "in": "path",
           "required": true
         }
@@ -3543,18 +3744,22 @@ func init() {
       "description": "Storage group keeps verification information for Data Audit sessions.",
       "type": "object",
       "required": [
-        "lifetime",
+        "address",
+        "expirationEpoch",
+        "size",
         "members"
       ],
       "properties": {
-        "containerId": {
-          "description": "Container id to which storage group is belong. Set by server.",
-          "type": "string",
+        "address": {
+          "description": "Address of storage group object. Set by server.",
+          "$ref": "#/definitions/Address",
           "readOnly": true
         },
-        "lifetime": {
-          "description": "Lifetime in epochs for storage group.",
-          "type": "integer"
+        "expirationEpoch": {
+          "type": "string"
+        },
+        "hash": {
+          "type": "string"
         },
         "members": {
           "description": "Object identifiers to be placed into storage group. Must be unique.",
@@ -3567,10 +3772,8 @@ func init() {
           "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
           "type": "string"
         },
-        "objectId": {
-          "description": "Object id of storage group. Set by server.",
-          "type": "string",
-          "readOnly": true
+        "size": {
+          "type": "string"
         }
       }
     },
@@ -3609,6 +3812,30 @@ func init() {
           "items": {
             "$ref": "#/definitions/StorageGroupBaseInfo"
           }
+        }
+      }
+    },
+    "StorageGroupPutBody": {
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
         }
       }
     },
@@ -3739,6 +3966,13 @@ func init() {
       "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
+    },
+    "storageGroupId": {
+      "type": "string",
+      "description": "Base58 encoded storage group id.",
+      "name": "storageGroupId",
+      "in": "path",
+      "required": true
     }
   },
   "securityDefinitions": {

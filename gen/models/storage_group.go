@@ -19,13 +19,17 @@ import (
 // swagger:model StorageGroup
 type StorageGroup struct {
 
-	// Container id to which storage group is belong. Set by server.
-	// Read Only: true
-	ContainerID string `json:"containerId,omitempty"`
-
-	// Lifetime in epochs for storage group.
+	// Address of storage group object. Set by server.
 	// Required: true
-	Lifetime *int64 `json:"lifetime"`
+	// Read Only: true
+	Address *Address `json:"address"`
+
+	// expiration epoch
+	// Required: true
+	ExpirationEpoch *string `json:"expirationEpoch"`
+
+	// hash
+	Hash string `json:"hash,omitempty"`
 
 	// Object identifiers to be placed into storage group. Must be unique.
 	// Required: true
@@ -34,20 +38,28 @@ type StorageGroup struct {
 	// Name of storage group. It will be the value of the `FileName` attribute in storage group object.
 	Name string `json:"name,omitempty"`
 
-	// Object id of storage group. Set by server.
-	// Read Only: true
-	ObjectID string `json:"objectId,omitempty"`
+	// size
+	// Required: true
+	Size *string `json:"size"`
 }
 
 // Validate validates this storage group
 func (m *StorageGroup) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateLifetime(formats); err != nil {
+	if err := m.validateAddress(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateExpirationEpoch(formats); err != nil {
 		res = append(res, err)
 	}
 
 	if err := m.validateMembers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateSize(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -57,9 +69,29 @@ func (m *StorageGroup) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *StorageGroup) validateLifetime(formats strfmt.Registry) error {
+func (m *StorageGroup) validateAddress(formats strfmt.Registry) error {
 
-	if err := validate.Required("lifetime", "body", m.Lifetime); err != nil {
+	if err := validate.Required("address", "body", m.Address); err != nil {
+		return err
+	}
+
+	if m.Address != nil {
+		if err := m.Address.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("address")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("address")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *StorageGroup) validateExpirationEpoch(formats strfmt.Registry) error {
+
+	if err := validate.Required("expirationEpoch", "body", m.ExpirationEpoch); err != nil {
 		return err
 	}
 
@@ -75,15 +107,20 @@ func (m *StorageGroup) validateMembers(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *StorageGroup) validateSize(formats strfmt.Registry) error {
+
+	if err := validate.Required("size", "body", m.Size); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // ContextValidate validate this storage group based on the context it is used
 func (m *StorageGroup) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.contextValidateContainerID(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateObjectID(ctx, formats); err != nil {
+	if err := m.contextValidateAddress(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -93,19 +130,17 @@ func (m *StorageGroup) ContextValidate(ctx context.Context, formats strfmt.Regis
 	return nil
 }
 
-func (m *StorageGroup) contextValidateContainerID(ctx context.Context, formats strfmt.Registry) error {
+func (m *StorageGroup) contextValidateAddress(ctx context.Context, formats strfmt.Registry) error {
 
-	if err := validate.ReadOnly(ctx, "containerId", "body", string(m.ContainerID)); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *StorageGroup) contextValidateObjectID(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := validate.ReadOnly(ctx, "objectId", "body", string(m.ObjectID)); err != nil {
-		return err
+	if m.Address != nil {
+		if err := m.Address.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("address")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("address")
+			}
+			return err
+		}
 	}
 
 	return nil

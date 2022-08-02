@@ -6,8 +6,6 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"context"
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -16,13 +14,11 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
-
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
 )
 
-// NewPutStorageGroupParams creates a new PutStorageGroupParams object
+// NewGetStorageGroupParams creates a new GetStorageGroupParams object
 // with the default values initialized.
-func NewPutStorageGroupParams() PutStorageGroupParams {
+func NewGetStorageGroupParams() GetStorageGroupParams {
 
 	var (
 		// initialize parameters with default values
@@ -30,16 +26,16 @@ func NewPutStorageGroupParams() PutStorageGroupParams {
 		walletConnectDefault = bool(false)
 	)
 
-	return PutStorageGroupParams{
+	return GetStorageGroupParams{
 		WalletConnect: &walletConnectDefault,
 	}
 }
 
-// PutStorageGroupParams contains all the bound params for the put storage group operation
+// GetStorageGroupParams contains all the bound params for the get storage group operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters putStorageGroup
-type PutStorageGroupParams struct {
+// swagger:parameters getStorageGroup
+type GetStorageGroupParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
@@ -59,11 +55,11 @@ type PutStorageGroupParams struct {
 	  In: path
 	*/
 	ContainerID string
-	/*Storage group co create.
+	/*Base58 encoded storage group id.
 	  Required: true
-	  In: body
+	  In: path
 	*/
-	StorageGroup *models.StorageGroupPutBody
+	StorageGroupID string
 	/*Use wallet connect signature scheme or native NeoFS signature.
 	  In: query
 	  Default: false
@@ -74,8 +70,8 @@ type PutStorageGroupParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewPutStorageGroupParams() beforehand.
-func (o *PutStorageGroupParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewGetStorageGroupParams() beforehand.
+func (o *GetStorageGroupParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -95,32 +91,9 @@ func (o *PutStorageGroupParams) BindRequest(r *http.Request, route *middleware.M
 		res = append(res, err)
 	}
 
-	if runtime.HasBody(r) {
-		defer r.Body.Close()
-		var body models.StorageGroupPutBody
-		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("storageGroup", "body", ""))
-			} else {
-				res = append(res, errors.NewParseError("storageGroup", "body", "", err))
-			}
-		} else {
-			// validate body object
-			if err := body.Validate(route.Formats); err != nil {
-				res = append(res, err)
-			}
-
-			ctx := validate.WithOperationRequest(context.Background())
-			if err := body.ContextValidate(ctx, route.Formats); err != nil {
-				res = append(res, err)
-			}
-
-			if len(res) == 0 {
-				o.StorageGroup = &body
-			}
-		}
-	} else {
-		res = append(res, errors.Required("storageGroup", "body", ""))
+	rStorageGroupID, rhkStorageGroupID, _ := route.Params.GetOK("storageGroupId")
+	if err := o.bindStorageGroupID(rStorageGroupID, rhkStorageGroupID, route.Formats); err != nil {
+		res = append(res, err)
 	}
 
 	qWalletConnect, qhkWalletConnect, _ := qs.GetOK("walletConnect")
@@ -134,7 +107,7 @@ func (o *PutStorageGroupParams) BindRequest(r *http.Request, route *middleware.M
 }
 
 // bindXBearerSignature binds and validates parameter XBearerSignature from header.
-func (o *PutStorageGroupParams) bindXBearerSignature(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetStorageGroupParams) bindXBearerSignature(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("X-Bearer-Signature", "header", rawData)
 	}
@@ -154,7 +127,7 @@ func (o *PutStorageGroupParams) bindXBearerSignature(rawData []string, hasKey bo
 }
 
 // bindXBearerSignatureKey binds and validates parameter XBearerSignatureKey from header.
-func (o *PutStorageGroupParams) bindXBearerSignatureKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetStorageGroupParams) bindXBearerSignatureKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("X-Bearer-Signature-Key", "header", rawData)
 	}
@@ -174,7 +147,7 @@ func (o *PutStorageGroupParams) bindXBearerSignatureKey(rawData []string, hasKey
 }
 
 // bindContainerID binds and validates parameter ContainerID from path.
-func (o *PutStorageGroupParams) bindContainerID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetStorageGroupParams) bindContainerID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -187,8 +160,22 @@ func (o *PutStorageGroupParams) bindContainerID(rawData []string, hasKey bool, f
 	return nil
 }
 
+// bindStorageGroupID binds and validates parameter StorageGroupID from path.
+func (o *GetStorageGroupParams) bindStorageGroupID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
+	o.StorageGroupID = raw
+
+	return nil
+}
+
 // bindWalletConnect binds and validates parameter WalletConnect from query.
-func (o *PutStorageGroupParams) bindWalletConnect(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *GetStorageGroupParams) bindWalletConnect(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -198,7 +185,7 @@ func (o *PutStorageGroupParams) bindWalletConnect(rawData []string, hasKey bool,
 	// AllowEmptyValue: false
 
 	if raw == "" { // empty values pass all other validations
-		// Default values have been previously initialized by NewPutStorageGroupParams()
+		// Default values have been previously initialized by NewGetStorageGroupParams()
 		return nil
 	}
 

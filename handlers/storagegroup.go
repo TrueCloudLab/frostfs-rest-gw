@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"bytes"
 	"context"
+	"encoding/hex"
 	"fmt"
+	"io"
 	"strconv"
 
 	"github.com/go-openapi/runtime/middleware"
@@ -153,7 +156,120 @@ func headObjectStorageGroupBaseInfo(ctx context.Context, p *pool.Pool, cnrID cid
 	return resp, nil
 }
 
-func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.Token, storageGroup *models.StorageGroup) (*storagegroup.StorageGroup, error) {
+// DeleteStorageGroup handler that removes storage group from NeoFS.
+func (a *API) DeleteStorageGroup(params operations.DeleteStorageGroupParams, principal *models.Principal) middleware.Responder {
+	ctx := params.HTTPRequest.Context()
+
+	addr, err := parseAddress(params.ContainerID, params.StorageGroupID)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("invalid address", err)
+		return operations.NewDeleteStorageGroupBadRequest().WithPayload(resp)
+	}
+
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("failed to get bearer token", err)
+		return operations.NewDeleteStorageGroupBadRequest().WithPayload(resp)
+	}
+
+	var prm pool.PrmObjectDelete
+	prm.SetAddress(addr)
+	prm.UseBearer(btoken)
+
+	if err = a.pool.DeleteObject(ctx, prm); err != nil {
+		resp := a.logAndGetErrorResponse("failed to delete storage group", err)
+		return operations.NewDeleteStorageGroupBadRequest().WithPayload(resp)
+	}
+
+	return operations.NewDeleteStorageGroupOK().WithPayload(util.NewSuccessResponse())
+}
+
+// GetStorageGroup handler that get storage group info.
+func (a *API) GetStorageGroup(params operations.GetStorageGroupParams, principal *models.Principal) middleware.Responder {
+	errorResponse := operations.NewGetObjectInfoBadRequest()
+	ctx := params.HTTPRequest.Context()
+
+	addr, err := parseAddress(params.ContainerID, params.StorageGroupID)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("invalid address", err)
+		return errorResponse.WithPayload(resp)
+	}
+
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("get bearer token", err)
+		return errorResponse.WithPayload(resp)
+	}
+
+	var prm pool.PrmObjectGet
+	prm.SetAddress(addr)
+	prm.UseBearer(btoken)
+
+	objRes, err := a.pool.GetObject(ctx, prm)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("get storage group object", err)
+		return errorResponse.WithPayload(resp)
+	}
+
+	sb, err := a.readStorageGroup(objRes)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("read storage group", err)
+		return errorResponse.WithPayload(resp)
+	}
+
+	var sbHash string
+	cs, ok := sb.ValidationDataHash()
+	if ok {
+		sbHash = hex.EncodeToString(cs.Value())
+	}
+
+	members := make([]string, len(sb.Members()))
+	for i, objID := range sb.Members() {
+		members[i] = objID.EncodeToString()
+	}
+
+	resp := &models.StorageGroup{
+		Address: &models.Address{
+			ContainerID: util.NewString(addr.Container().String()),
+			ObjectID:    util.NewString(addr.Object().String()),
+		},
+		ExpirationEpoch: util.NewString(strconv.FormatUint(sb.ExpirationEpoch(), 10)),
+		Size:            util.NewString(strconv.FormatUint(sb.ValidationDataSize(), 10)),
+		Hash:            sbHash,
+		Members:         members,
+		Name:            getStorageGroupName(objRes.Header),
+	}
+
+	return operations.NewGetStorageGroupOK().WithPayload(resp)
+}
+
+func getStorageGroupName(obj object.Object) string {
+	for _, attribute := range obj.Attributes() {
+		if attribute.Key() == object.AttributeFileName {
+			return attribute.Value()
+		}
+	}
+	return ""
+}
+
+func (a *API) readStorageGroup(objRes *pool.ResGetObject) (*storagegroup.StorageGroup, error) {
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, objRes.Payload); err != nil {
+		return nil, fmt.Errorf("failed to copy storage group payload: %w", err)
+	}
+
+	obj := objRes.Header
+	obj.SetPayload(buf.Bytes())
+
+	var sb storagegroup.StorageGroup
+	if err := storagegroup.ReadFromObject(&sb, obj); err != nil {
+		return nil, fmt.Errorf("read storage group from object: %w", err)
+	}
+
+	return &sb, nil
+}
+
+func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.Token, storageGroup *models.StorageGroupPutBody) (*storagegroup.StorageGroup, error) {
 	members, err := a.parseStorageGroupMembers(storageGroup)
 	if err != nil {
 		return nil, fmt.Errorf("parse storage group members: %w", err)
@@ -257,7 +373,7 @@ func (a *API) getStorageGroupSizeAndHash(ctx context.Context, cnrID cid.ID, btok
 	return sgSize, nil, nil
 }
 
-func (a *API) parseStorageGroupMembers(storageGroup *models.StorageGroup) ([]oid.ID, error) {
+func (a *API) parseStorageGroupMembers(storageGroup *models.StorageGroupPutBody) ([]oid.ID, error) {
 	var err error
 
 	members := make([]oid.ID, len(storageGroup.Members))

@@ -56,6 +56,12 @@ parameters:
     type: string
     required: true
     description: Base58 encoded object id.
+  storageGroupId:
+    in: path
+    name: storageGroupId
+    type: string
+    required: true
+    description: Base58 encoded storage group id.
 
 paths:
   /auth:
@@ -572,7 +578,7 @@ paths:
           required: true
           description: Storage group co create.
           schema:
-            $ref: '#/definitions/StorageGroup'
+            $ref: '#/definitions/StorageGroupPutBody'
       responses:
         200:
           description: Address of uploaded storage group.
@@ -594,6 +600,43 @@ paths:
           description: List of storage groups.
           schema:
             $ref: '#/definitions/StorageGroupList'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /containers/{containerId}/storagegroups/{storageGroupId}:
+    parameters:
+      - $ref: '#/parameters/containerId'
+      - $ref: '#/parameters/storageGroupId'
+    get:
+      operationId: getStorageGroup
+      summary: Get storage group info.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+      responses:
+        200:
+          description: Storage group information.
+          schema:
+            $ref: '#/definitions/StorageGroup'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      operationId: deleteStorageGroup
+      summary: Delete storage group from container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+      responses:
+        200:
+          description: Successful deletion.
+          schema:
+            $ref: '#/definitions/SuccessResponse'
         400:
           description: Bad request.
           schema:
@@ -1072,21 +1115,12 @@ definitions:
               value: myfile
           targets:
             - role: OTHERS
-  StorageGroup:
-    description: Storage group keeps verification information for Data Audit sessions.
+  StorageGroupPutBody:
     type: object
     properties:
       name:
         description: Name of storage group. It will be the value of the `FileName` attribute in storage group object.
         type: string
-      containerId:
-        description: Container id to which storage group is belong. Set by server.
-        type: string
-        readOnly: true
-      objectId:
-        description: Object id of storage group. Set by server.
-        type: string
-        readOnly: true
       lifetime:
         description: Lifetime in epochs for storage group.
         type: integer
@@ -1097,6 +1131,33 @@ definitions:
           type: string
     required:
       - lifetime
+      - members
+  StorageGroup:
+    description: Storage group keeps verification information for Data Audit sessions.
+    type: object
+    properties:
+      name:
+        description: Name of storage group. It will be the value of the `FileName` attribute in storage group object.
+        type: string
+      address:
+        description: Address of storage group object. Set by server.
+        readOnly: true
+        $ref: '#/definitions/Address'
+      expirationEpoch:
+        type: string
+      hash:
+        type: string
+      size:
+        type: string
+      members:
+        description: Object identifiers to be placed into storage group. Must be unique.
+        type: array
+        items:
+          type: string
+    required:
+      - address
+      - expirationEpoch
+      - size
       - members
   StorageGroupBaseInfo:
     description: Storage group info for listing.
