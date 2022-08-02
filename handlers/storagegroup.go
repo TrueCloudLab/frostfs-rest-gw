@@ -3,8 +3,10 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/go-openapi/runtime/middleware"
+	objectv2 "github.com/nspcc-dev/neofs-api-go/v2/object"
 	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
 	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
 	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
@@ -52,6 +54,103 @@ func (a *API) PutStorageGroup(params operations.PutStorageGroupParams, principal
 	resp.ObjectID = util.NewString(objID.String())
 
 	return operations.NewPutStorageGroupOK().WithPayload(&resp)
+}
+
+// ListStorageGroups handler that create a new storage group.
+func (a *API) ListStorageGroups(params operations.ListStorageGroupsParams, principal *models.Principal) middleware.Responder {
+	ctx := params.HTTPRequest.Context()
+
+	cnrID, err := parseContainerID(params.ContainerID)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("invalid container id", err)
+		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
+	}
+
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("invalid bearer token", err)
+		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
+	}
+
+	var filters object.SearchFilters
+	filters.AddTypeFilter(object.MatchStringEqual, object.TypeStorageGroup)
+
+	var prm pool.PrmObjectSearch
+	prm.SetContainerID(cnrID)
+	prm.UseBearer(btoken)
+	prm.SetFilters(filters)
+
+	resSearch, err := a.pool.SearchObjects(ctx, prm)
+	if err != nil {
+		resp := a.logAndGetErrorResponse("failed to search objects", err)
+		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
+	}
+
+	var iterateErr error
+	var sgInfo *models.StorageGroupBaseInfo
+	var storageGroups []*models.StorageGroupBaseInfo
+
+	err = resSearch.Iterate(func(id oid.ID) bool {
+		if sgInfo, iterateErr = headObjectStorageGroupBaseInfo(ctx, a.pool, cnrID, id, btoken); iterateErr != nil {
+			return true
+		}
+
+		storageGroups = append(storageGroups, sgInfo)
+		return false
+	})
+	if err == nil {
+		err = iterateErr
+	}
+	if err != nil {
+		resp := a.logAndGetErrorResponse("failed to search storage groups", err)
+		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
+	}
+
+	resp := &models.StorageGroupList{
+		Size:          util.NewInteger(int64(len(storageGroups))),
+		StorageGroups: storageGroups,
+	}
+
+	return operations.NewListStorageGroupsOK().WithPayload(resp)
+}
+
+func headObjectStorageGroupBaseInfo(ctx context.Context, p *pool.Pool, cnrID cid.ID, objID oid.ID, btoken bearer.Token) (*models.StorageGroupBaseInfo, error) {
+	var addr oid.Address
+	addr.SetContainer(cnrID)
+	addr.SetObject(objID)
+
+	var prm pool.PrmObjectHead
+	prm.SetAddress(addr)
+	prm.UseBearer(btoken)
+
+	objInfo, err := p.HeadObject(ctx, prm)
+	if err != nil {
+		return nil, fmt.Errorf("head object '%s': %w", objID.EncodeToString(), err)
+	}
+
+	resp := &models.StorageGroupBaseInfo{
+		Address: &models.Address{
+			ContainerID: util.NewString(cnrID.String()),
+			ObjectID:    util.NewString(objID.String()),
+		},
+	}
+
+	expEpoch := "0"
+	for _, attr := range objInfo.Attributes() {
+		switch attr.Key() {
+		case object.AttributeFileName:
+			resp.Name = attr.Value()
+		case objectv2.SysAttributeExpEpoch:
+			if _, err = strconv.ParseUint(attr.Value(), 10, 64); err != nil {
+				return nil, fmt.Errorf("invalid expiration epoch '%s': %w", attr.Value(), err)
+			}
+			expEpoch = attr.Value()
+		}
+	}
+
+	resp.ExpirationEpoch = &expEpoch
+
+	return resp, nil
 }
 
 func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.Token, storageGroup *models.StorageGroup) (*storagegroup.StorageGroup, error) {

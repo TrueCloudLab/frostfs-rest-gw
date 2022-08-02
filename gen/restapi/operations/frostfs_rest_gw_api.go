@@ -71,6 +71,9 @@ func NewFrostfsRestGwAPI(spec *loads.Document) *FrostfsRestGwAPI {
 		ListContainersHandler: ListContainersHandlerFunc(func(params ListContainersParams) middleware.Responder {
 			return middleware.NotImplemented("operation ListContainers has not yet been implemented")
 		}),
+		ListStorageGroupsHandler: ListStorageGroupsHandlerFunc(func(params ListStorageGroupsParams, principal *models.Principal) middleware.Responder {
+			return middleware.NotImplemented("operation ListStorageGroups has not yet been implemented")
+		}),
 		OptionsAuthHandler: OptionsAuthHandlerFunc(func(params OptionsAuthParams) middleware.Responder {
 			return middleware.NotImplemented("operation OptionsAuth has not yet been implemented")
 		}),
@@ -178,6 +181,8 @@ type FrostfsRestGwAPI struct {
 	GetObjectInfoHandler GetObjectInfoHandler
 	// ListContainersHandler sets the operation handler for the list containers operation
 	ListContainersHandler ListContainersHandler
+	// ListStorageGroupsHandler sets the operation handler for the list storage groups operation
+	ListStorageGroupsHandler ListStorageGroupsHandler
 	// OptionsAuthHandler sets the operation handler for the options auth operation
 	OptionsAuthHandler OptionsAuthHandler
 	// OptionsAuthBearerHandler sets the operation handler for the options auth bearer operation
@@ -311,6 +316,9 @@ func (o *FrostfsRestGwAPI) Validate() error {
 	}
 	if o.ListContainersHandler == nil {
 		unregistered = append(unregistered, "ListContainersHandler")
+	}
+	if o.ListStorageGroupsHandler == nil {
+		unregistered = append(unregistered, "ListStorageGroupsHandler")
 	}
 	if o.OptionsAuthHandler == nil {
 		unregistered = append(unregistered, "OptionsAuthHandler")
@@ -486,6 +494,10 @@ func (o *FrostfsRestGwAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/containers"] = NewListContainers(o.context, o.ListContainersHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/containers/{containerId}/storagegroups"] = NewListStorageGroups(o.context, o.ListStorageGroupsHandler)
 	if o.handlers["OPTIONS"] == nil {
 		o.handlers["OPTIONS"] = make(map[string]http.Handler)
 	}

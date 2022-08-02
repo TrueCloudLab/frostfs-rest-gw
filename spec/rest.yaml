@@ -556,6 +556,7 @@ paths:
           description: Bad request.
           schema:
             $ref: '#/definitions/ErrorResponse'
+
   /containers/{containerId}/storagegroups:
     parameters:
       - $ref: '#/parameters/containerId'
@@ -577,6 +578,22 @@ paths:
           description: Address of uploaded storage group.
           schema:
             $ref: '#/definitions/Address'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      operationId: listStorageGroups
+      summary: Find all storage groups in container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+      responses:
+        200:
+          description: List of storage groups.
+          schema:
+            $ref: '#/definitions/StorageGroupList'
         400:
           description: Bad request.
           schema:
@@ -1081,6 +1098,32 @@ definitions:
     required:
       - lifetime
       - members
+  StorageGroupBaseInfo:
+    description: Storage group info for listing.
+    type: object
+    properties:
+      name:
+        type: string
+      address:
+        $ref: '#/definitions/Address'
+      expirationEpoch:
+        type: string
+    required:
+      - address
+      - expirationEpoch
+  StorageGroupList:
+    description: List of storage groups.
+    type: object
+    properties:
+      size:
+        type: integer
+      storageGroups:
+        type: array
+        items:
+          $ref: '#/definitions/StorageGroupBaseInfo'
+    required:
+      - size
+      - storageGroups
   Attribute:
     description: Attribute is a pair of strings that can be attached to a container or an object.
     type: object
