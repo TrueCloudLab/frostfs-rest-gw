@@ -275,12 +275,12 @@ func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.
 		return nil, fmt.Errorf("parse storage group members: %w", err)
 	}
 
-	needCalcHash, err := isHomomorphicHashingDisabled(ctx, a.pool, cnrID)
+	hashDisabled, err := isHomomorphicHashingDisabled(ctx, a.pool, cnrID)
 	if err != nil {
 		return nil, fmt.Errorf("check if homomorphic hash disabled: %w", err)
 	}
 
-	sgSize, cs, err := a.getStorageGroupSizeAndHash(ctx, cnrID, btoken, members, needCalcHash)
+	sgSize, cs, err := a.getStorageGroupSizeAndHash(ctx, cnrID, btoken, members, !hashDisabled)
 	if err != nil {
 		return nil, fmt.Errorf("get storage group size: %w", err)
 	}
@@ -295,7 +295,7 @@ func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.
 	sg.SetValidationDataSize(sgSize)
 	sg.SetExpirationEpoch(networkInfo.CurrentEpoch() + uint64(*storageGroup.Lifetime))
 
-	if needCalcHash {
+	if !hashDisabled {
 		sg.SetValidationDataHash(*cs)
 	}
 
