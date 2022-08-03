@@ -1132,6 +1132,11 @@ definitions:
     required:
       - lifetime
       - members
+    example:
+      name: my-storage-group
+      lifetime: 100
+      members:
+        - 8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
   StorageGroup:
     description: Storage group keeps verification information for Data Audit sessions.
     type: object
@@ -1144,10 +1149,13 @@ definitions:
         readOnly: true
         $ref: '#/definitions/Address'
       expirationEpoch:
+        description: Expiration epoch of storage group.
         type: string
       hash:
+        description: Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.
         type: string
       size:
+        description: Total size of the payloads of objects in the storage group.
         type: string
       members:
         description: Object identifiers to be placed into storage group. Must be unique.
@@ -1159,6 +1167,15 @@ definitions:
       - expirationEpoch
       - size
       - members
+    example:
+      name: my-storage-group
+      address:
+        objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+        containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+      expirationEpoch: 5000
+      size: 4096
+      members:
+        - 8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
   StorageGroupBaseInfo:
     description: Storage group info for listing.
     type: object
@@ -1172,6 +1189,12 @@ definitions:
     required:
       - address
       - expirationEpoch
+    example:
+      name: my-storage-group
+      address:
+        objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+        containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+      expirationEpoch: 5000
   StorageGroupList:
     description: List of storage groups.
     type: object
@@ -1185,6 +1208,14 @@ definitions:
     required:
       - size
       - storageGroups
+    example:
+      size: 1
+      storageGroups:
+        - name: my-storage-group
+          address:
+            objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+            containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+          expirationEpoch: 5000
   Attribute:
     description: Attribute is a pair of strings that can be attached to a container or an object.
     type: object
