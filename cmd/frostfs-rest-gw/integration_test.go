@@ -135,6 +135,8 @@ func runTests(ctx context.Context, t *testing.T, key *keys.PrivateKey, version s
 	t.Run("rest put container eacl "+version, func(t *testing.T) { restContainerEACLPut(ctx, t, clientPool, owner) })
 	t.Run("rest get container eacl "+version, func(t *testing.T) { restContainerEACLGet(ctx, t, clientPool, cnrID) })
 	t.Run("rest list containers	"+version, func(t *testing.T) { restContainerList(ctx, t, clientPool, owner, cnrID) })
+
+	t.Run("rest manage storage group "+version, func(t *testing.T) { restManageStorageGroup(ctx, t, clientPool, owner, cnrID) })
 }
 
 func createDockerContainer(ctx context.Context, t *testing.T, image string) testcontainers.Container {
@@ -441,6 +443,117 @@ func checkGWErrorResponse(t *testing.T, httpClient *http.Client, request *http.R
 	doRequest(t, httpClient, request, http.StatusBadRequest, resp)
 	require.Equal(t, int64(0), resp.Code)
 	require.Equal(t, models.ErrorTypeGW, *resp.Type)
+}
+
+func restManageStorageGroup(ctx context.Context, t *testing.T, clientPool *pool.Pool, owner user.ID, cnrID cid.ID) {
+	attributes := map[string]string{object.AttributeFileName: "someFile"}
+	content := []byte("content")
+	objID := createObject(ctx, t, clientPool, &owner, cnrID, attributes, content)
+
+	bearer := &models.Bearer{Object: getAllowedRules()}
+	httpClient := defaultHTTPClient()
+	bearerTokens := makeAuthTokenRequest(ctx, t, []*models.Bearer{bearer}, httpClient)
+	bearerToken := bearerTokens[0]
+
+	query := make(url.Values)
+	query.Add(walletConnectQuery, strconv.FormatBool(useWalletConnect))
+
+	var storageGroupAddress models.Address
+	storageGroupName := "my-storage-group"
+	t.Run("put storage group", func(t *testing.T) {
+		req := &models.StorageGroupPutBody{
+			Lifetime: util.NewInteger(10),
+			Members:  []string{objID.EncodeToString()},
+			Name:     storageGroupName,
+		}
+
+		body, err := json.Marshal(req)
+		require.NoError(t, err)
+
+		request, err := http.NewRequest(http.MethodPut, testHost+"/v1/containers/"+cnrID.EncodeToString()+"/storagegroups?"+query.Encode(), bytes.NewReader(body))
+		require.NoError(t, err)
+		prepareCommonHeaders(request.Header, bearerToken)
+
+		doRequest(t, httpClient, request, http.StatusOK, &storageGroupAddress)
+		require.Equal(t, cnrID.EncodeToString(), *storageGroupAddress.ContainerID)
+	})
+
+	t.Run("list storage groups", func(t *testing.T) {
+		request, err := http.NewRequest(http.MethodGet, testHost+"/v1/containers/"+cnrID.EncodeToString()+"/storagegroups?"+query.Encode(), nil)
+		require.NoError(t, err)
+		prepareCommonHeaders(request.Header, bearerToken)
+
+		list := &models.StorageGroupList{}
+		doRequest(t, httpClient, request, http.StatusOK, list)
+
+		require.Equal(t, int64(1), *list.Size)
+		require.Equal(t, storageGroupAddress.ContainerID, list.StorageGroups[0].Address.ContainerID)
+		require.Equal(t, storageGroupAddress.ObjectID, list.StorageGroups[0].Address.ObjectID)
+		require.Equal(t, storageGroupName, list.StorageGroups[0].Name)
+		require.NotEmpty(t, list.StorageGroups[0].ExpirationEpoch)
+	})
+
+	t.Run("get storage group", func(t *testing.T) {
+		request, err := http.NewRequest(http.MethodGet, testHost+"/v1/containers/"+cnrID.EncodeToString()+"/storagegroups/"+*storageGroupAddress.ObjectID+"?"+query.Encode(), nil)
+		require.NoError(t, err)
+		prepareCommonHeaders(request.Header, bearerToken)
+
+		group := &models.StorageGroup{}
+		doRequest(t, httpClient, request, http.StatusOK, group)
+
+		require.Equal(t, strconv.Itoa(len(content)), *group.Size)
+		require.Equal(t, storageGroupName, group.Name)
+		require.Equal(t, storageGroupAddress.ContainerID, group.Address.ContainerID)
+		require.Equal(t, storageGroupAddress.ObjectID, group.Address.ObjectID)
+		require.NotEmpty(t, *group.ExpirationEpoch)
+		require.Equal(t, []string{objID.EncodeToString()}, group.Members)
+	})
+
+	t.Run("delete storage group", func(t *testing.T) {
+		request, err := http.NewRequest(http.MethodDelete, testHost+"/v1/containers/"+cnrID.EncodeToString()+"/storagegroups/"+*storageGroupAddress.ObjectID+"?"+query.Encode(), nil)
+		require.NoError(t, err)
+		prepareCommonHeaders(request.Header, bearerToken)
+
+		resp := &models.SuccessResponse{}
+		doRequest(t, httpClient, request, http.StatusOK, resp)
+		require.True(t, *resp.Success)
+
+		var sgObjID oid.ID
+		err = sgObjID.DecodeString(*storageGroupAddress.ObjectID)
+		require.NoError(t, err)
+
+		var addr oid.Address
+		addr.SetContainer(cnrID)
+		addr.SetObject(sgObjID)
+
+		var prm pool.PrmObjectHead
+		prm.SetAddress(addr)
+
+		_, err = clientPool.HeadObject(ctx, prm)
+		require.Error(t, err)
+	})
+}
+
+func getAllowedRules() []*models.Record {
+	var result []*models.Record
+
+	ops := []models.Operation{models.OperationGET, models.OperationHEAD, models.OperationPUT,
+		models.OperationDELETE, models.OperationSEARCH, models.OperationRANGE, models.OperationRANGEHASH}
+
+	for _, op := range ops {
+		rec := &models.Record{
+			Operation: models.NewOperation(op),
+			Action:    models.NewAction(models.ActionALLOW),
+			Filters:   []*models.Filter{},
+			Targets: []*models.Target{{
+				Role: models.NewRole(models.RoleOTHERS),
+				Keys: []string{},
+			}},
+		}
+		result = append(result, rec)
+	}
+
+	return result
 }
 
 func restObjectPut(ctx context.Context, t *testing.T, clientPool *pool.Pool, cnrID cid.ID) {
@@ -1282,7 +1395,7 @@ func createContainer(ctx context.Context, t *testing.T, clientPool *pool.Pool, o
 
 	var waitPrm pool.WaitParams
 	waitPrm.SetPollInterval(3 * time.Second)
-	waitPrm.SetTimeout(15 * time.Second)
+	waitPrm.SetTimeout(30 * time.Second)
 
 	var prm pool.PrmContainerPut
 	prm.SetContainer(cnr)
@@ -1335,7 +1448,7 @@ func restrictByEACL(ctx context.Context, t *testing.T, clientPool *pool.Pool, cn
 
 	var waitPrm pool.WaitParams
 	waitPrm.SetPollInterval(3 * time.Second)
-	waitPrm.SetTimeout(15 * time.Second)
+	waitPrm.SetTimeout(30 * time.Second)
 
 	var prm pool.PrmContainerSetEACL
 	prm.SetTable(*table)
