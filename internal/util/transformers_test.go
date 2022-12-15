@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	apistatus "github.com/nspcc-dev/neofs-sdk-go/client/status"
+	apistatus "github.com/TrueCloudLab/frostfs-sdk-go/client/status"
 	"github.com/stretchr/testify/require"
 )
 

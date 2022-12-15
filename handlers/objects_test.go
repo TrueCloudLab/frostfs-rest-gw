@@ -3,8 +3,8 @@ package handlers
 import (
 	"testing"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
 	"github.com/stretchr/testify/require"
 )
 

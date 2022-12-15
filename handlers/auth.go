@@ -5,18 +5,18 @@ import (
 	"encoding/base64"
 	"fmt"
 
+	"github.com/TrueCloudLab/frostfs-api-go/v2/acl"
+	"github.com/TrueCloudLab/frostfs-api-go/v2/refs"
+	sessionv2 "github.com/TrueCloudLab/frostfs-api-go/v2/session"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
+	neofsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
+	"github.com/TrueCloudLab/frostfs-sdk-go/user"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/google/uuid"
 	"github.com/nspcc-dev/neo-go/pkg/crypto/keys"
-	"github.com/nspcc-dev/neofs-api-go/v2/acl"
-	"github.com/nspcc-dev/neofs-api-go/v2/refs"
-	sessionv2 "github.com/nspcc-dev/neofs-api-go/v2/session"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
-	neofsecdsa "github.com/nspcc-dev/neofs-sdk-go/crypto/ecdsa"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
-	"github.com/nspcc-dev/neofs-sdk-go/user"
 )
 
 const defaultTokenExpDuration = 100 // in epoch

@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // GetObjectInfoHandlerFunc turns a function with the right signature into a get object info handler
@@ -31,10 +31,10 @@ func NewGetObjectInfo(ctx *middleware.Context, handler GetObjectInfoHandler) *Ge
 	return &GetObjectInfo{Context: ctx, Handler: handler}
 }
 
-/* GetObjectInfo swagger:route GET /objects/{containerId}/{objectId} getObjectInfo
+/*
+	GetObjectInfo swagger:route GET /objects/{containerId}/{objectId} getObjectInfo
 
 Get object info by address
-
 */
 type GetObjectInfo struct {
 	Context *middleware.Context

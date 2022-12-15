@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // FormBinaryBearerHandlerFunc turns a function with the right signature into a form binary bearer handler
@@ -31,10 +31,10 @@ func NewFormBinaryBearer(ctx *middleware.Context, handler FormBinaryBearerHandle
 	return &FormBinaryBearer{Context: ctx, Handler: handler}
 }
 
-/* FormBinaryBearer swagger:route GET /auth/bearer formBinaryBearer
+/*
+	FormBinaryBearer swagger:route GET /auth/bearer formBinaryBearer
 
 Form binary bearer token
-
 */
 type FormBinaryBearer struct {
 	Context *middleware.Context

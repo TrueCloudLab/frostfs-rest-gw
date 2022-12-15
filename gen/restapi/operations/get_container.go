@@ -29,10 +29,10 @@ func NewGetContainer(ctx *middleware.Context, handler GetContainerHandler) *GetC
 	return &GetContainer{Context: ctx, Handler: handler}
 }
 
-/* GetContainer swagger:route GET /containers/{containerId} getContainer
+/*
+	GetContainer swagger:route GET /containers/{containerId} getContainer
 
 Get container by id
-
 */
 type GetContainer struct {
 	Context *middleware.Context

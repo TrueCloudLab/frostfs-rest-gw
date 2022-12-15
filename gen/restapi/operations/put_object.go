@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // PutObjectHandlerFunc turns a function with the right signature into a put object handler
@@ -31,10 +31,10 @@ func NewPutObject(ctx *middleware.Context, handler PutObjectHandler) *PutObject 
 	return &PutObject{Context: ctx, Handler: handler}
 }
 
-/* PutObject swagger:route PUT /objects putObject
+/*
+	PutObject swagger:route PUT /objects putObject
 
 Upload object to NeoFS
-
 */
 type PutObject struct {
 	Context *middleware.Context

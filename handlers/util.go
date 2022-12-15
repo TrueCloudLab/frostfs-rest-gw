@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	objectv2 "github.com/nspcc-dev/neofs-api-go/v2/object"
-	sessionv2 "github.com/nspcc-dev/neofs-api-go/v2/session"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-sdk-go/container/acl"
-	"github.com/nspcc-dev/neofs-sdk-go/object"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
+	objectv2 "github.com/TrueCloudLab/frostfs-api-go/v2/object"
+	sessionv2 "github.com/TrueCloudLab/frostfs-api-go/v2/session"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-sdk-go/container/acl"
+	"github.com/TrueCloudLab/frostfs-sdk-go/object"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
 )
 
 // PrmAttributes groups parameters to form attributes from request headers.

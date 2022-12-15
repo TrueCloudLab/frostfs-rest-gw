@@ -29,10 +29,10 @@ func NewAuth(ctx *middleware.Context, handler AuthHandler) *Auth {
 	return &Auth{Context: ctx, Handler: handler}
 }
 
-/* Auth swagger:route POST /auth auth
+/*
+	Auth swagger:route POST /auth auth
 
 Form bearer token to further requests
-
 */
 type Auth struct {
 	Context *middleware.Context

@@ -5,13 +5,13 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-sdk-go/bearer"
-	apistatus "github.com/nspcc-dev/neofs-sdk-go/client/status"
-	cid "github.com/nspcc-dev/neofs-sdk-go/container/id"
-	"github.com/nspcc-dev/neofs-sdk-go/eacl"
-	"github.com/nspcc-dev/neofs-sdk-go/object"
-	"github.com/nspcc-dev/neofs-sdk-go/session"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-sdk-go/bearer"
+	apistatus "github.com/TrueCloudLab/frostfs-sdk-go/client/status"
+	cid "github.com/TrueCloudLab/frostfs-sdk-go/container/id"
+	"github.com/TrueCloudLab/frostfs-sdk-go/eacl"
+	"github.com/TrueCloudLab/frostfs-sdk-go/object"
+	"github.com/TrueCloudLab/frostfs-sdk-go/session"
 )
 
 // ToNativeAction converts models.Action to appropriate eacl.Action.

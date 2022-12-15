@@ -14,7 +14,8 @@ import (
 // OptionsContainersEACLOKCode is the HTTP code returned for type OptionsContainersEACLOK
 const OptionsContainersEACLOKCode int = 200
 
-/*OptionsContainersEACLOK CORS
+/*
+OptionsContainersEACLOK CORS
 
 swagger:response optionsContainersEAclOK
 */

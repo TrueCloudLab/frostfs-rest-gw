@@ -70,7 +70,7 @@ endif
 # Generate server by swagger spec
 generate-server: swagger
 	./bin/swagger generate server -t gen -f ./spec/rest.yaml --exclude-main \
-		-A neofs-rest-gw -P models.Principal \
+		-A frostfs-rest-gw -P models.Principal \
 		-C templates/server-config.yaml --template-dir templates
 
 # Run tests

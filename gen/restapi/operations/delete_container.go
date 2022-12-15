@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // DeleteContainerHandlerFunc turns a function with the right signature into a delete container handler
@@ -31,10 +31,10 @@ func NewDeleteContainer(ctx *middleware.Context, handler DeleteContainerHandler)
 	return &DeleteContainer{Context: ctx, Handler: handler}
 }
 
-/* DeleteContainer swagger:route DELETE /containers/{containerId} deleteContainer
+/*
+	DeleteContainer swagger:route DELETE /containers/{containerId} deleteContainer
 
 Delete container by id
-
 */
 type DeleteContainer struct {
 	Context *middleware.Context

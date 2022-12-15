@@ -29,10 +29,10 @@ func NewOptionsContainersPutList(ctx *middleware.Context, handler OptionsContain
 	return &OptionsContainersPutList{Context: ctx, Handler: handler}
 }
 
-/* OptionsContainersPutList swagger:route OPTIONS /containers optionsContainersPutList
+/*
+	OptionsContainersPutList swagger:route OPTIONS /containers optionsContainersPutList
 
 OptionsContainersPutList options containers put list API
-
 */
 type OptionsContainersPutList struct {
 	Context *middleware.Context

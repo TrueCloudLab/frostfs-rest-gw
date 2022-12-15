@@ -14,7 +14,8 @@ import (
 // OptionsContainersGetDeleteOKCode is the HTTP code returned for type OptionsContainersGetDeleteOK
 const OptionsContainersGetDeleteOKCode int = 200
 
-/*OptionsContainersGetDeleteOK CORS
+/*
+OptionsContainersGetDeleteOK CORS
 
 swagger:response optionsContainersGetDeleteOK
 */

@@ -22,7 +22,7 @@ import (
 	"github.com/go-openapi/swag"
 	"golang.org/x/net/netutil"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
 )
 
 const (
@@ -62,8 +62,8 @@ type ServerConfig struct {
 	SuccessfulStartCallback func()
 }
 
-// NewServer creates a new api neofs rest gw server but does not configure it
-func NewServer(api *operations.NeofsRestGwAPI, cfg *ServerConfig) *Server {
+// NewServer creates a new api frostfs rest gw server but does not configure it
+func NewServer(api *operations.FrostfsRestGwAPI, cfg *ServerConfig) *Server {
 	s := new(Server)
 	s.EnabledListeners = cfg.EnabledListeners
 	s.CleanupTimeout = cfg.CleanupTimeout
@@ -93,13 +93,13 @@ func NewServer(api *operations.NeofsRestGwAPI, cfg *ServerConfig) *Server {
 }
 
 // ConfigureAPI configures the API and handlers.
-func (s *Server) ConfigureAPI(fn func(*operations.NeofsRestGwAPI) http.Handler) {
+func (s *Server) ConfigureAPI(fn func(*operations.FrostfsRestGwAPI) http.Handler) {
 	if s.api != nil {
 		s.handler = fn(s.api)
 	}
 }
 
-// Server for the neofs rest gw API
+// Server for the frostfs rest gw API
 type Server struct {
 	EnabledListeners []string
 	CleanupTimeout   time.Duration
@@ -128,7 +128,7 @@ type Server struct {
 	cfgTLSFn    func(tlsConfig *tls.Config)
 	cfgServerFn func(s *http.Server, scheme, addr string)
 
-	api          *operations.NeofsRestGwAPI
+	api          *operations.FrostfsRestGwAPI
 	handler      http.Handler
 	hasListeners bool
 	shutdown     chan struct{}
@@ -217,13 +217,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpServer)
 		wg.Add(1)
-		s.Logf("Serving neofs rest gw at http://%s", s.httpServerL.Addr())
+		s.Logf("Serving frostfs rest gw at http://%s", s.httpServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving neofs rest gw at http://%s", l.Addr())
+			s.Logf("Stopped serving frostfs rest gw at http://%s", l.Addr())
 		}(s.httpServerL)
 	}
 
@@ -314,13 +314,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpsServer)
 		wg.Add(1)
-		s.Logf("Serving neofs rest gw at https://%s", s.httpsServerL.Addr())
+		s.Logf("Serving frostfs rest gw at https://%s", s.httpsServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpsServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving neofs rest gw at https://%s", l.Addr())
+			s.Logf("Stopped serving frostfs rest gw at https://%s", l.Addr())
 		}(tls.NewListener(s.httpsServerL, httpsServer.TLSConfig))
 	}
 

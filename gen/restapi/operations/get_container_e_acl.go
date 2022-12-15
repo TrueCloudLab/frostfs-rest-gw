@@ -29,10 +29,10 @@ func NewGetContainerEACL(ctx *middleware.Context, handler GetContainerEACLHandle
 	return &GetContainerEACL{Context: ctx, Handler: handler}
 }
 
-/* GetContainerEACL swagger:route GET /containers/{containerId}/eacl getContainerEAcl
+/*
+	GetContainerEACL swagger:route GET /containers/{containerId}/eacl getContainerEAcl
 
 Get container EACL by id
-
 */
 type GetContainerEACL struct {
 	Context *middleware.Context

@@ -14,7 +14,8 @@ import (
 // OptionsAuthBearerOKCode is the HTTP code returned for type OptionsAuthBearerOK
 const OptionsAuthBearerOKCode int = 200
 
-/*OptionsAuthBearerOK CORS
+/*
+OptionsAuthBearerOK CORS
 
 swagger:response optionsAuthBearerOK
 */

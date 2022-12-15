@@ -19,12 +19,12 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
-// NewNeofsRestGwAPI creates a new NeofsRestGw instance
-func NewNeofsRestGwAPI(spec *loads.Document) *NeofsRestGwAPI {
-	return &NeofsRestGwAPI{
+// NewFrostfsRestGwAPI creates a new FrostfsRestGw instance
+func NewFrostfsRestGwAPI(spec *loads.Document) *FrostfsRestGwAPI {
+	return &FrostfsRestGwAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -117,8 +117,8 @@ func NewNeofsRestGwAPI(spec *loads.Document) *NeofsRestGwAPI {
 	}
 }
 
-/*NeofsRestGwAPI REST API for native integration with NeoFS. */
-type NeofsRestGwAPI struct {
+/*FrostfsRestGwAPI REST API for native integration with NeoFS. */
+type FrostfsRestGwAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -220,52 +220,52 @@ type NeofsRestGwAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *NeofsRestGwAPI) UseRedoc() {
+func (o *FrostfsRestGwAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *NeofsRestGwAPI) UseSwaggerUI() {
+func (o *FrostfsRestGwAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *NeofsRestGwAPI) SetDefaultProduces(mediaType string) {
+func (o *FrostfsRestGwAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *NeofsRestGwAPI) SetDefaultConsumes(mediaType string) {
+func (o *FrostfsRestGwAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *NeofsRestGwAPI) SetSpec(spec *loads.Document) {
+func (o *FrostfsRestGwAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *NeofsRestGwAPI) DefaultProduces() string {
+func (o *FrostfsRestGwAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *NeofsRestGwAPI) DefaultConsumes() string {
+func (o *FrostfsRestGwAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *NeofsRestGwAPI) Formats() strfmt.Registry {
+func (o *FrostfsRestGwAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *NeofsRestGwAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *FrostfsRestGwAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the NeofsRestGwAPI
-func (o *NeofsRestGwAPI) Validate() error {
+// Validate validates the registrations in the FrostfsRestGwAPI
+func (o *FrostfsRestGwAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -352,12 +352,12 @@ func (o *NeofsRestGwAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *NeofsRestGwAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *FrostfsRestGwAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *NeofsRestGwAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *FrostfsRestGwAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 	result := make(map[string]runtime.Authenticator)
 	for name := range schemes {
 		switch name {
@@ -373,13 +373,13 @@ func (o *NeofsRestGwAPI) AuthenticatorsFor(schemes map[string]spec.SecuritySchem
 }
 
 // Authorizer returns the registered authorizer
-func (o *NeofsRestGwAPI) Authorizer() runtime.Authorizer {
+func (o *FrostfsRestGwAPI) Authorizer() runtime.Authorizer {
 	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *NeofsRestGwAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *FrostfsRestGwAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -396,7 +396,7 @@ func (o *NeofsRestGwAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Co
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *NeofsRestGwAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *FrostfsRestGwAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -412,7 +412,7 @@ func (o *NeofsRestGwAPI) ProducersFor(mediaTypes []string) map[string]runtime.Pr
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *NeofsRestGwAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *FrostfsRestGwAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -427,8 +427,8 @@ func (o *NeofsRestGwAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the neofs rest gw API
-func (o *NeofsRestGwAPI) Context() *middleware.Context {
+// Context returns the middleware context for the frostfs rest gw API
+func (o *FrostfsRestGwAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -436,7 +436,7 @@ func (o *NeofsRestGwAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *NeofsRestGwAPI) initHandlerCache() {
+func (o *FrostfsRestGwAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -530,7 +530,7 @@ func (o *NeofsRestGwAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *NeofsRestGwAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *FrostfsRestGwAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -543,24 +543,24 @@ func (o *NeofsRestGwAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *NeofsRestGwAPI) Init() {
+func (o *FrostfsRestGwAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *NeofsRestGwAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *FrostfsRestGwAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *NeofsRestGwAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *FrostfsRestGwAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *NeofsRestGwAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *FrostfsRestGwAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""
