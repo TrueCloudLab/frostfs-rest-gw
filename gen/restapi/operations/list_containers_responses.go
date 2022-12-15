@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // ListContainersOKCode is the HTTP code returned for type ListContainersOK
 const ListContainersOKCode int = 200
 
-/*ListContainersOK Containers info.
+/*
+ListContainersOK Containers info.
 
 swagger:response listContainersOK
 */
@@ -82,7 +83,8 @@ func (o *ListContainersOK) WriteResponse(rw http.ResponseWriter, producer runtim
 // ListContainersBadRequestCode is the HTTP code returned for type ListContainersBadRequest
 const ListContainersBadRequestCode int = 400
 
-/*ListContainersBadRequest Bad request.
+/*
+ListContainersBadRequest Bad request.
 
 swagger:response listContainersBadRequest
 */

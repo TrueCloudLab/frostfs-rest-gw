@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // SearchObjectsHandlerFunc turns a function with the right signature into a search objects handler
@@ -31,10 +31,10 @@ func NewSearchObjects(ctx *middleware.Context, handler SearchObjectsHandler) *Se
 	return &SearchObjects{Context: ctx, Handler: handler}
 }
 
-/* SearchObjects swagger:route POST /objects/{containerId}/search searchObjects
+/*
+	SearchObjects swagger:route POST /objects/{containerId}/search searchObjects
 
 Search objects by filters
-
 */
 type SearchObjects struct {
 	Context *middleware.Context

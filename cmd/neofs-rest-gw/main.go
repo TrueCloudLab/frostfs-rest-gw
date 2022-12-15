@@ -5,9 +5,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
 	"github.com/go-openapi/loads"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
 	"go.uber.org/zap"
 )
 
@@ -31,7 +31,7 @@ func main() {
 	serverCfg := serverConfig(v)
 	serverCfg.SuccessfulStartCallback = neofsAPI.StartCallback
 
-	api := operations.NewNeofsRestGwAPI(swaggerSpec)
+	api := operations.NewFrostfsRestGwAPI(swaggerSpec)
 	server := restapi.NewServer(api, serverCfg)
 	defer func() {
 		if err = server.Shutdown(); err != nil {

@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // DeleteContainerOKCode is the HTTP code returned for type DeleteContainerOK
 const DeleteContainerOKCode int = 200
 
-/*DeleteContainerOK Successful deletion.
+/*
+DeleteContainerOK Successful deletion.
 
 swagger:response deleteContainerOK
 */
@@ -82,7 +83,8 @@ func (o *DeleteContainerOK) WriteResponse(rw http.ResponseWriter, producer runti
 // DeleteContainerBadRequestCode is the HTTP code returned for type DeleteContainerBadRequest
 const DeleteContainerBadRequestCode int = 400
 
-/*DeleteContainerBadRequest Bad request.
+/*
+DeleteContainerBadRequest Bad request.
 
 swagger:response deleteContainerBadRequest
 */

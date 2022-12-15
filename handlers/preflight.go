@@ -1,8 +1,8 @@
 package handlers
 
 import (
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
 )
 
 const (

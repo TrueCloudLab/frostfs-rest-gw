@@ -3,7 +3,7 @@ package handlers
 import (
 	"testing"
 
-	sessionv2 "github.com/nspcc-dev/neofs-api-go/v2/session"
+	sessionv2 "github.com/TrueCloudLab/frostfs-api-go/v2/session"
 	"github.com/stretchr/testify/require"
 )
 

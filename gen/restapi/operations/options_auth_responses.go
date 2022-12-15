@@ -14,7 +14,8 @@ import (
 // OptionsAuthOKCode is the HTTP code returned for type OptionsAuthOK
 const OptionsAuthOKCode int = 200
 
-/*OptionsAuthOK CORS
+/*
+OptionsAuthOK CORS
 
 swagger:response optionsAuthOK
 */

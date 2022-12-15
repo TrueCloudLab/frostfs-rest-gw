@@ -14,24 +14,24 @@ import (
 	"testing"
 	"time"
 
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/handlers"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
+	"github.com/TrueCloudLab/frostfs-sdk-go/bearer"
+	"github.com/TrueCloudLab/frostfs-sdk-go/container"
+	"github.com/TrueCloudLab/frostfs-sdk-go/container/acl"
+	cid "github.com/TrueCloudLab/frostfs-sdk-go/container/id"
+	neofsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
+	"github.com/TrueCloudLab/frostfs-sdk-go/eacl"
+	"github.com/TrueCloudLab/frostfs-sdk-go/netmap"
+	"github.com/TrueCloudLab/frostfs-sdk-go/object"
+	oid "github.com/TrueCloudLab/frostfs-sdk-go/object/id"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
+	"github.com/TrueCloudLab/frostfs-sdk-go/user"
 	"github.com/go-openapi/loads"
 	"github.com/nspcc-dev/neo-go/pkg/crypto/keys"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/handlers"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
-	"github.com/nspcc-dev/neofs-sdk-go/bearer"
-	"github.com/nspcc-dev/neofs-sdk-go/container"
-	"github.com/nspcc-dev/neofs-sdk-go/container/acl"
-	cid "github.com/nspcc-dev/neofs-sdk-go/container/id"
-	neofsecdsa "github.com/nspcc-dev/neofs-sdk-go/crypto/ecdsa"
-	"github.com/nspcc-dev/neofs-sdk-go/eacl"
-	"github.com/nspcc-dev/neofs-sdk-go/netmap"
-	"github.com/nspcc-dev/neofs-sdk-go/object"
-	oid "github.com/nspcc-dev/neofs-sdk-go/object/id"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
-	"github.com/nspcc-dev/neofs-sdk-go/user"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
@@ -166,7 +166,7 @@ func runServer(ctx context.Context, t *testing.T, node string) context.CancelFun
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
 	require.NoError(t, err)
 
-	api := operations.NewNeofsRestGwAPI(swaggerSpec)
+	api := operations.NewFrostfsRestGwAPI(swaggerSpec)
 	server := restapi.NewServer(api, serverConfig(v))
 
 	server.ConfigureAPI(neofsAPI.Configure)

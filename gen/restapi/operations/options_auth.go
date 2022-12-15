@@ -29,10 +29,10 @@ func NewOptionsAuth(ctx *middleware.Context, handler OptionsAuthHandler) *Option
 	return &OptionsAuth{Context: ctx, Handler: handler}
 }
 
-/* OptionsAuth swagger:route OPTIONS /auth optionsAuth
+/*
+	OptionsAuth swagger:route OPTIONS /auth optionsAuth
 
 OptionsAuth options auth API
-
 */
 type OptionsAuth struct {
 	Context *middleware.Context

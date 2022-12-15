@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // GetBalanceOKCode is the HTTP code returned for type GetBalanceOK
 const GetBalanceOKCode int = 200
 
-/*GetBalanceOK Balance of address in NeoFS
+/*
+GetBalanceOK Balance of address in NeoFS
 
 swagger:response getBalanceOK
 */
@@ -82,7 +83,8 @@ func (o *GetBalanceOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 // GetBalanceBadRequestCode is the HTTP code returned for type GetBalanceBadRequest
 const GetBalanceBadRequestCode int = 400
 
-/*GetBalanceBadRequest Bad request
+/*
+GetBalanceBadRequest Bad request
 
 swagger:response getBalanceBadRequest
 */

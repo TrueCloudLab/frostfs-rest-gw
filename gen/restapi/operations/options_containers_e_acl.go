@@ -29,10 +29,10 @@ func NewOptionsContainersEACL(ctx *middleware.Context, handler OptionsContainers
 	return &OptionsContainersEACL{Context: ctx, Handler: handler}
 }
 
-/* OptionsContainersEACL swagger:route OPTIONS /containers/{containerId}/eacl optionsContainersEAcl
+/*
+	OptionsContainersEACL swagger:route OPTIONS /containers/{containerId}/eacl optionsContainersEAcl
 
 OptionsContainersEACL options containers e ACL API
-
 */
 type OptionsContainersEACL struct {
 	Context *middleware.Context

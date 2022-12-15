@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // SearchObjectsOKCode is the HTTP code returned for type SearchObjectsOK
 const SearchObjectsOKCode int = 200
 
-/*SearchObjectsOK List of objects
+/*
+SearchObjectsOK List of objects
 
 swagger:response searchObjectsOK
 */
@@ -82,7 +83,8 @@ func (o *SearchObjectsOK) WriteResponse(rw http.ResponseWriter, producer runtime
 // SearchObjectsBadRequestCode is the HTTP code returned for type SearchObjectsBadRequest
 const SearchObjectsBadRequestCode int = 400
 
-/*SearchObjectsBadRequest Bad request
+/*
+SearchObjectsBadRequest Bad request
 
 swagger:response searchObjectsBadRequest
 */

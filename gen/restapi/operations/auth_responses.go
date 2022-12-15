@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // AuthOKCode is the HTTP code returned for type AuthOK
 const AuthOKCode int = 200
 
-/*AuthOK Base64 encoded stable binary marshaled bearer token bodies.
+/*
+AuthOK Base64 encoded stable binary marshaled bearer token bodies.
 
 swagger:response authOK
 */
@@ -85,7 +86,8 @@ func (o *AuthOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer
 // AuthBadRequestCode is the HTTP code returned for type AuthBadRequest
 const AuthBadRequestCode int = 400
 
-/*AuthBadRequest Bad request
+/*
+AuthBadRequest Bad request
 
 swagger:response authBadRequest
 */

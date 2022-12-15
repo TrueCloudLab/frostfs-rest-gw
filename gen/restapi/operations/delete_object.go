@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // DeleteObjectHandlerFunc turns a function with the right signature into a delete object handler
@@ -31,10 +31,10 @@ func NewDeleteObject(ctx *middleware.Context, handler DeleteObjectHandler) *Dele
 	return &DeleteObject{Context: ctx, Handler: handler}
 }
 
-/* DeleteObject swagger:route DELETE /objects/{containerId}/{objectId} deleteObject
+/*
+	DeleteObject swagger:route DELETE /objects/{containerId}/{objectId} deleteObject
 
 Remove object from NeoFS
-
 */
 type DeleteObject struct {
 	Context *middleware.Context

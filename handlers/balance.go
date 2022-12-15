@@ -3,12 +3,12 @@ package handlers
 import (
 	"strconv"
 
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
+	"github.com/TrueCloudLab/frostfs-sdk-go/user"
 	"github.com/go-openapi/runtime/middleware"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
-	"github.com/nspcc-dev/neofs-sdk-go/user"
 )
 
 // Balance handler that get balance from NeoFS.

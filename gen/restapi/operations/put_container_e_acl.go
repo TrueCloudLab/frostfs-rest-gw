@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // PutContainerEACLHandlerFunc turns a function with the right signature into a put container e ACL handler
@@ -31,10 +31,10 @@ func NewPutContainerEACL(ctx *middleware.Context, handler PutContainerEACLHandle
 	return &PutContainerEACL{Context: ctx, Handler: handler}
 }
 
-/* PutContainerEACL swagger:route PUT /containers/{containerId}/eacl putContainerEAcl
+/*
+	PutContainerEACL swagger:route PUT /containers/{containerId}/eacl putContainerEAcl
 
 Set container EACL by id
-
 */
 type PutContainerEACL struct {
 	Context *middleware.Context

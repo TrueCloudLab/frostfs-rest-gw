@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // PutContainerHandlerFunc turns a function with the right signature into a put container handler
@@ -36,10 +36,10 @@ func NewPutContainer(ctx *middleware.Context, handler PutContainerHandler) *PutC
 	return &PutContainer{Context: ctx, Handler: handler}
 }
 
-/* PutContainer swagger:route PUT /containers putContainer
+/*
+	PutContainer swagger:route PUT /containers putContainer
 
 Create new container in NeoFS
-
 */
 type PutContainer struct {
 	Context *middleware.Context

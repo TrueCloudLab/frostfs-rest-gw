@@ -7,16 +7,16 @@ import (
 	"strings"
 	"time"
 
+	sessionv2 "github.com/TrueCloudLab/frostfs-api-go/v2/session"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
+	"github.com/TrueCloudLab/frostfs-rest-gw/metrics"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
+	"github.com/TrueCloudLab/frostfs-sdk-go/user"
 	"github.com/go-openapi/errors"
 	"github.com/google/uuid"
 	"github.com/nspcc-dev/neo-go/pkg/crypto/keys"
-	sessionv2 "github.com/nspcc-dev/neofs-api-go/v2/session"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
-	"github.com/nspcc-dev/neofs-rest-gw/metrics"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
-	"github.com/nspcc-dev/neofs-sdk-go/user"
 	"go.uber.org/zap"
 )
 
@@ -92,7 +92,7 @@ func New(prm *PrmAPI) *API {
 	}
 }
 
-func (a *API) Configure(api *operations.NeofsRestGwAPI) http.Handler {
+func (a *API) Configure(api *operations.FrostfsRestGwAPI) http.Handler {
 	api.ServeError = errors.ServeError
 
 	api.UseSwaggerUI()
