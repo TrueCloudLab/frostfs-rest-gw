@@ -8,7 +8,7 @@ BUILD_ARCH ?= amd64
 GO_VERSION ?= 1.19
 LINT_VERSION ?= v1.49.0
 
-HUB_IMAGE ?= nspccdev/neofs-rest-gw
+HUB_IMAGE ?= truecloudlab/frostfs-rest-gw
 HUB_TAG ?= "$(shell echo ${VERSION} | sed 's/^v//')"
 
 SWAGGER_VERSION ?= v0.29.0
@@ -31,7 +31,7 @@ SWAGGER_URL ?= "https://github.com/go-swagger/go-swagger/releases/download/$(SWA
 # List of binaries to build. For now just one.
 BINDIR = bin
 DIRS = "$(BINDIR)"
-BINS = "$(BINDIR)/neofs-rest-gw"
+BINS = "$(BINDIR)/frostfs-rest-gw"
 
 .PHONY: help all dep clean format test cover lint docker/lint
 
@@ -45,7 +45,7 @@ $(BINS): $(DIRS) dep
 	GOARCH=$(BUILD_ARCH) \
 	go build -v -trimpath \
 	-ldflags "-X main.Version=$(VERSION)" \
-	-o $@ ./cmd/neofs-rest-gw
+	-o $@ ./cmd/frostfs-rest-gw
 
 $(DIRS):
 	@echo "⇒ Ensure dir: $@"
@@ -91,7 +91,7 @@ format:
 
 # Build clean Docker image
 image:
-	@echo "⇒ Build NeoFS REST Gateway docker image "
+	@echo "⇒ Build FrostFS REST Gateway docker image "
 	@docker build \
 		--build-arg REPO=$(REPO) \
 		--build-arg VERSION=$(VERSION) \
@@ -106,7 +106,7 @@ image-push:
 
 # Build dirty Docker image
 image-dirty:
-	@echo "⇒ Build NeoFS REST Gateway dirty docker image "
+	@echo "⇒ Build FrostFS REST Gateway dirty docker image "
 	@docker build \
 		--build-arg REPO=$(REPO) \
 		--build-arg VERSION=$(VERSION) \
@@ -139,7 +139,7 @@ docker/generate-server:
 		--env HOME=/src \
 		quay.io/goswagger/swagger:$(SWAGGER_VERSION) generate server \
 			-t gen -f ./spec/rest.yaml --exclude-main \
-			-A neofs-rest-gw -P models.Principal \
+			-A frostfs-rest-gw -P models.Principal \
 			-C templates/server-config.yaml --template-dir templates
 
 # Run linters in Docker

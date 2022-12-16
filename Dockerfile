@@ -21,7 +21,7 @@ FROM scratch
 WORKDIR /
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /src/bin/neofs-rest-gw /bin/neofs-rest-gw
+COPY --from=builder /src/bin/frostfs-rest-gw /bin/frostfs-rest-gw
 COPY --from=builder /src/static /static
 
-ENTRYPOINT ["/bin/neofs-rest-gw"]
+ENTRYPOINT ["/bin/frostfs-rest-gw"]

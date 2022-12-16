@@ -117,7 +117,7 @@ func config() *viper.Viper {
 	flagSet.Duration(cmdHealthcheckTimeout, defaultHealthcheckTimeout, "gRPC healthcheck timeout")
 	flagSet.Duration(cmdRebalance, defaultRebalanceTimer, "gRPC connection rebalance timer")
 
-	peers := flagSet.StringArrayP(cmdPeers, "p", nil, "NeoFS nodes")
+	peers := flagSet.StringArrayP(cmdPeers, "p", nil, "FrostFS nodes")
 
 	// init server flags
 	restapi.BindDefaultFlags(flagSet)
@@ -146,7 +146,7 @@ func config() *viper.Viper {
 
 	switch {
 	case help != nil && *help:
-		fmt.Printf("NeoFS REST Gateway %s\n", Version)
+		fmt.Printf("FrostFS REST Gateway %s\n", Version)
 		flagSet.PrintDefaults()
 
 		fmt.Println()
@@ -166,7 +166,7 @@ func config() *viper.Viper {
 
 		os.Exit(0)
 	case version != nil && *version:
-		fmt.Printf("NeoFS REST Gateway\nVersion: %s\nGoVersion: %s\n", Version, runtime.Version())
+		fmt.Printf("FrostFS REST Gateway\nVersion: %s\nGoVersion: %s\n", Version, runtime.Version())
 		os.Exit(0)
 	case configFlag != nil && *configFlag != "":
 		if cfgFile, err := os.Open(*configFlag); err != nil {

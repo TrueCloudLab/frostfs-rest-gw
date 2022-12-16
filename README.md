@@ -84,7 +84,7 @@ generate-server Generate boilerplate by spec
 
 ### Docker
 
-Or you can also use a [Docker image](https://hub.docker.com/r/nspccdev/neofs-rest-gw) provided for released
+Or you can also use a [Docker image](https://hub.docker.com/r/truecloudlab/frostfs-rest-gw) provided for released
 (and occasionally unreleased) versions of gateway (`:latest` points to the latest stable release).
 
 ## Execution
