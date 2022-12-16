@@ -1,7 +1,7 @@
 
-# neofs-rest-gw
+# frostfs-rest-gw
 
-NeoFS REST Gateway bridges NeoFS internal protocol and REST API server.
+FrostFS REST Gateway bridges FrostFS internal protocol and REST API server.
 
 ### Open API specification
 
@@ -9,7 +9,7 @@ See full [API spec](/v1/docs).
 
 ### Basic concept
 
-Using this API you can interact with NeoFS nodes and manage containers and objects.
+Using this API you can interact with FrostFS nodes and manage containers and objects.
 
 #### Container
 
@@ -72,7 +72,7 @@ Also, you can use this attribute to further object searching.
 
 ### Status codes
 
-More about NeoFS status code you can
+More about FrostFS status code you can
 find [here](https://github.com/nspcc-dev/neofs-spec/blob/master/20-api-v2/status.md).
 
 

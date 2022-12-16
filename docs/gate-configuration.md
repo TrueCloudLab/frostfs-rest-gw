@@ -1,6 +1,6 @@
-# NeoFS REST Gateway configuration file
+# FrostFS REST Gateway configuration file
 
-This section contains detailed NeoFS REST Gateway configuration file description
+This section contains detailed FrostFS REST Gateway configuration file description
 including default config values and some tips to set up configurable values.
 
 There are some custom types used for brevity:
@@ -88,23 +88,23 @@ pool:
   error-threshold: 100
 
   # Nodes configuration
-  # This configuration makes the gateway use the first node (node1.neofs:8080)
-  # while it's healthy. Otherwise, gateway uses the second node (node2.neofs:8080)
-  # for 10% of requests and the third node (node3.neofs:8080) for 90% of requests.
+  # This configuration makes the gateway use the first node (node1.frostfs:8080)
+  # while it's healthy. Otherwise, gateway uses the second node (node2.frostfs:8080)
+  # for 10% of requests and the third node (node3.frostfs:8080) for 90% of requests.
   # Until nodes with the same priority level are healthy
   # nodes with other priority are not used.
   # The lower the value, the higher the priority.
   peers:
     0:
-      address: node1.neofs:8080
+      address: node1.frostfs:8080
       priority: 1
       weight: 1
     1:
-      address: node2.neofs:8080
+      address: node2.frostfs:8080
       priority: 2
       weight: 0.1
     2:
-      address: node3.neofs:8080
+      address: node3.frostfs:8080
       priority: 2
       weight: 0.9
 ```
