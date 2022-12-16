@@ -31,10 +31,10 @@ func NewPutObject(ctx *middleware.Context, handler PutObjectHandler) *PutObject 
 	return &PutObject{Context: ctx, Handler: handler}
 }
 
-/*
-	PutObject swagger:route PUT /objects putObject
+/* PutObject swagger:route PUT /objects putObject
 
-Upload object to NeoFS
+Upload object to FrostFS
+
 */
 type PutObject struct {
 	Context *middleware.Context

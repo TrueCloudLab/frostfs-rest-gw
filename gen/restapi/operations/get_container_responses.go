@@ -16,8 +16,7 @@ import (
 // GetContainerOKCode is the HTTP code returned for type GetContainerOK
 const GetContainerOKCode int = 200
 
-/*
-GetContainerOK Container info.
+/*GetContainerOK Container info.
 
 swagger:response getContainerOK
 */
@@ -83,8 +82,7 @@ func (o *GetContainerOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 // GetContainerBadRequestCode is the HTTP code returned for type GetContainerBadRequest
 const GetContainerBadRequestCode int = 400
 
-/*
-GetContainerBadRequest Bad request.
+/*GetContainerBadRequest Bad request.
 
 swagger:response getContainerBadRequest
 */

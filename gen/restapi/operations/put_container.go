@@ -36,10 +36,10 @@ func NewPutContainer(ctx *middleware.Context, handler PutContainerHandler) *PutC
 	return &PutContainer{Context: ctx, Handler: handler}
 }
 
-/*
-	PutContainer swagger:route PUT /containers putContainer
+/* PutContainer swagger:route PUT /containers putContainer
 
-Create new container in NeoFS
+Create new container in FrostFS
+
 */
 type PutContainer struct {
 	Context *middleware.Context

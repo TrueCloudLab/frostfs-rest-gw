@@ -31,10 +31,10 @@ func NewDeleteObject(ctx *middleware.Context, handler DeleteObjectHandler) *Dele
 	return &DeleteObject{Context: ctx, Handler: handler}
 }
 
-/*
-	DeleteObject swagger:route DELETE /objects/{containerId}/{objectId} deleteObject
+/* DeleteObject swagger:route DELETE /objects/{containerId}/{objectId} deleteObject
 
-Remove object from NeoFS
+Remove object from FrostFS
+
 */
 type DeleteObject struct {
 	Context *middleware.Context

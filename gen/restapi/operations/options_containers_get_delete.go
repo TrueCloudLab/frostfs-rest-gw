@@ -29,10 +29,10 @@ func NewOptionsContainersGetDelete(ctx *middleware.Context, handler OptionsConta
 	return &OptionsContainersGetDelete{Context: ctx, Handler: handler}
 }
 
-/*
-	OptionsContainersGetDelete swagger:route OPTIONS /containers/{containerId} optionsContainersGetDelete
+/* OptionsContainersGetDelete swagger:route OPTIONS /containers/{containerId} optionsContainersGetDelete
 
 OptionsContainersGetDelete options containers get delete API
+
 */
 type OptionsContainersGetDelete struct {
 	Context *middleware.Context

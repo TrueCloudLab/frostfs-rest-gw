@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// HeaderType Enumeration of possible sources of Headers to apply filters in NeoFS EACL.
+// HeaderType Enumeration of possible sources of Headers to apply filters in FrostFS EACL.
 //
 // swagger:model HeaderType
 type HeaderType string

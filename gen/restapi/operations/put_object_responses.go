@@ -16,8 +16,7 @@ import (
 // PutObjectOKCode is the HTTP code returned for type PutObjectOK
 const PutObjectOKCode int = 200
 
-/*
-PutObjectOK Address of uploaded objects
+/*PutObjectOK Address of uploaded objects
 
 swagger:response putObjectOK
 */
@@ -83,8 +82,7 @@ func (o *PutObjectOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pro
 // PutObjectBadRequestCode is the HTTP code returned for type PutObjectBadRequest
 const PutObjectBadRequestCode int = 400
 
-/*
-PutObjectBadRequest Bad request
+/*PutObjectBadRequest Bad request
 
 swagger:response putObjectBadRequest
 */

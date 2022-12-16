@@ -29,12 +29,12 @@ func NewGetBalance(ctx *middleware.Context, handler GetBalanceHandler) *GetBalan
 	return &GetBalance{Context: ctx, Handler: handler}
 }
 
-/*
-	GetBalance swagger:route GET /accounting/balance/{address} getBalance
+/* GetBalance swagger:route GET /accounting/balance/{address} getBalance
 
-# Get balance in NeoFS
+Get balance in FrostFS
 
-Getting balance of provided wallet address in NeoFS.
+Getting balance of provided wallet address in FrostFS.
+
 */
 type GetBalance struct {
 	Context *middleware.Context

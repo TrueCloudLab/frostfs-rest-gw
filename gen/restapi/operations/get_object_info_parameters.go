@@ -89,7 +89,7 @@ type GetObjectInfoParams struct {
 	  In: query
 	*/
 	RangeOffset *int64
-	/*Use wallet connect signature scheme or native NeoFS signature.
+	/*Use wallet connect signature scheme or native FrostFS signature.
 	  In: query
 	  Default: false
 	*/

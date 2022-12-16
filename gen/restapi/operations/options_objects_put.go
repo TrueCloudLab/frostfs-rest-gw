@@ -29,10 +29,10 @@ func NewOptionsObjectsPut(ctx *middleware.Context, handler OptionsObjectsPutHand
 	return &OptionsObjectsPut{Context: ctx, Handler: handler}
 }
 
-/*
-	OptionsObjectsPut swagger:route OPTIONS /objects optionsObjectsPut
+/* OptionsObjectsPut swagger:route OPTIONS /objects optionsObjectsPut
 
 OptionsObjectsPut options objects put API
+
 */
 type OptionsObjectsPut struct {
 	Context *middleware.Context

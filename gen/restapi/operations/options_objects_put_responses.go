@@ -14,8 +14,7 @@ import (
 // OptionsObjectsPutOKCode is the HTTP code returned for type OptionsObjectsPutOK
 const OptionsObjectsPutOKCode int = 200
 
-/*
-OptionsObjectsPutOK CORS
+/*OptionsObjectsPutOK CORS
 
 swagger:response optionsObjectsPutOK
 */

@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Record A single NeoFS EACL rule.
+// Record A single FrostFS EACL rule.
 // Example: {"action":"ALLOW","filters":[],"operation":"GET","targets":[{"keys":[],"role":"OTHERS"}]}
 //
 // swagger:model Record

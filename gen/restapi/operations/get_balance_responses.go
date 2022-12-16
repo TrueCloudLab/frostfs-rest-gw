@@ -16,8 +16,7 @@ import (
 // GetBalanceOKCode is the HTTP code returned for type GetBalanceOK
 const GetBalanceOKCode int = 200
 
-/*
-GetBalanceOK Balance of address in NeoFS
+/*GetBalanceOK Balance of address in FrostFS
 
 swagger:response getBalanceOK
 */
@@ -83,8 +82,7 @@ func (o *GetBalanceOK) WriteResponse(rw http.ResponseWriter, producer runtime.Pr
 // GetBalanceBadRequestCode is the HTTP code returned for type GetBalanceBadRequest
 const GetBalanceBadRequestCode int = 400
 
-/*
-GetBalanceBadRequest Bad request
+/*GetBalanceBadRequest Bad request
 
 swagger:response getBalanceBadRequest
 */

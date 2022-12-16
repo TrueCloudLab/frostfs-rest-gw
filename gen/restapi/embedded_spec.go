@@ -23,8 +23,8 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "REST API for native integration with NeoFS.",
-    "title": "REST API NeoFS",
+    "description": "REST API for native integration with FrostFS.",
+    "title": "REST API FrostFS",
     "version": "v1"
   },
   "host": "localhost:8090",
@@ -33,11 +33,11 @@ func init() {
     "/accounting/balance/{address}": {
       "get": {
         "security": [],
-        "description": "Getting balance of provided wallet address in NeoFS.",
+        "description": "Getting balance of provided wallet address in FrostFS.",
         "produces": [
           "application/json"
         ],
-        "summary": "Get balance in NeoFS",
+        "summary": "Get balance in FrostFS",
         "operationId": "getBalance",
         "parameters": [
           {
@@ -50,7 +50,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Balance of address in NeoFS",
+            "description": "Balance of address in FrostFS",
             "schema": {
               "$ref": "#/definitions/Balance"
             },
@@ -263,7 +263,7 @@ func init() {
         }
       },
       "put": {
-        "summary": "Create new container in NeoFS",
+        "summary": "Create new container in FrostFS",
         "operationId": "putContainer",
         "parameters": [
           {
@@ -531,7 +531,7 @@ func init() {
         "produces": [
           "application/json"
         ],
-        "summary": "Upload object to NeoFS",
+        "summary": "Upload object to FrostFS",
         "operationId": "putObject",
         "parameters": [
           {
@@ -755,7 +755,7 @@ func init() {
         }
       },
       "delete": {
-        "summary": "Remove object from NeoFS",
+        "summary": "Remove object from FrostFS",
         "operationId": "deleteObject",
         "parameters": [
           {
@@ -823,7 +823,7 @@ func init() {
   },
   "definitions": {
     "Action": {
-      "description": "Rule execution result action in NeoFS EACL. Either allows or denies access if the rule's filters match.",
+      "description": "Rule execution result action in FrostFS EACL. Either allows or denies access if the rule's filters match.",
       "type": "string",
       "enum": [
         "ALLOW",
@@ -831,7 +831,7 @@ func init() {
       ]
     },
     "Address": {
-      "description": "Address of the object in NeoFS.",
+      "description": "Address of the object in FrostFS.",
       "type": "object",
       "required": [
         "containerId",
@@ -1097,7 +1097,7 @@ func init() {
       }
     },
     "Eacl": {
-      "description": "EACL NeoFS table.",
+      "description": "EACL FrostFS table.",
       "type": "object",
       "required": [
         "records"
@@ -1170,7 +1170,7 @@ func init() {
       ]
     },
     "Filter": {
-      "description": "Filter in NeoFS EACL to check particular properties of the request or the object.",
+      "description": "Filter in FrostFS EACL to check particular properties of the request or the object.",
       "type": "object",
       "required": [
         "headerType",
@@ -1200,7 +1200,7 @@ func init() {
       }
     },
     "HeaderType": {
-      "description": "Enumeration of possible sources of Headers to apply filters in NeoFS EACL.",
+      "description": "Enumeration of possible sources of Headers to apply filters in FrostFS EACL.",
       "type": "string",
       "enum": [
         "REQUEST",
@@ -1209,7 +1209,7 @@ func init() {
       ]
     },
     "MatchType": {
-      "description": "Match type in NeoFS EACL filter.",
+      "description": "Match type in FrostFS EACL filter.",
       "type": "string",
       "enum": [
         "STRING_EQUAL",
@@ -1373,7 +1373,7 @@ func init() {
       }
     },
     "Operation": {
-      "description": "Request's operation type to match in NeoFS EACL if the rule is applicable to a particular request.",
+      "description": "Request's operation type to match in FrostFS EACL if the rule is applicable to a particular request.",
       "type": "string",
       "enum": [
         "GET",
@@ -1389,7 +1389,7 @@ func init() {
       "type": "string"
     },
     "Record": {
-      "description": "A single NeoFS EACL rule.",
+      "description": "A single FrostFS EACL rule.",
       "type": "object",
       "required": [
         "action",
@@ -1646,14 +1646,14 @@ func init() {
     "signatureScheme": {
       "type": "boolean",
       "default": false,
-      "description": "Use wallet connect signature scheme or native NeoFS signature.",
+      "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
     }
   },
   "securityDefinitions": {
     "BearerAuth": {
-      "description": "Bearer token body to provide with NeoFS request. Must have 'Bearer ' prefix.",
+      "description": "Bearer token body to provide with FrostFS request. Must have 'Bearer ' prefix.",
       "type": "apiKey",
       "name": "Authorization",
       "in": "header"
@@ -1671,8 +1671,8 @@ func init() {
   ],
   "swagger": "2.0",
   "info": {
-    "description": "REST API for native integration with NeoFS.",
-    "title": "REST API NeoFS",
+    "description": "REST API for native integration with FrostFS.",
+    "title": "REST API FrostFS",
     "version": "v1"
   },
   "host": "localhost:8090",
@@ -1681,11 +1681,11 @@ func init() {
     "/accounting/balance/{address}": {
       "get": {
         "security": [],
-        "description": "Getting balance of provided wallet address in NeoFS.",
+        "description": "Getting balance of provided wallet address in FrostFS.",
         "produces": [
           "application/json"
         ],
-        "summary": "Get balance in NeoFS",
+        "summary": "Get balance in FrostFS",
         "operationId": "getBalance",
         "parameters": [
           {
@@ -1698,7 +1698,7 @@ func init() {
         ],
         "responses": {
           "200": {
-            "description": "Balance of address in NeoFS",
+            "description": "Balance of address in FrostFS",
             "schema": {
               "$ref": "#/definitions/Balance"
             },
@@ -1827,7 +1827,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           }
@@ -1922,7 +1922,7 @@ func init() {
         }
       },
       "put": {
-        "summary": "Create new container in NeoFS",
+        "summary": "Create new container in FrostFS",
         "operationId": "putContainer",
         "parameters": [
           {
@@ -1940,7 +1940,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2057,7 +2057,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           }
@@ -2156,7 +2156,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2228,7 +2228,7 @@ func init() {
         "produces": [
           "application/json"
         ],
-        "summary": "Upload object to NeoFS",
+        "summary": "Upload object to FrostFS",
         "operationId": "putObject",
         "parameters": [
           {
@@ -2246,7 +2246,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2334,7 +2334,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2445,7 +2445,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2501,7 +2501,7 @@ func init() {
         }
       },
       "delete": {
-        "summary": "Remove object from NeoFS",
+        "summary": "Remove object from FrostFS",
         "operationId": "deleteObject",
         "parameters": [
           {
@@ -2519,7 +2519,7 @@ func init() {
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
             "in": "query"
           },
@@ -2591,7 +2591,7 @@ func init() {
   },
   "definitions": {
     "Action": {
-      "description": "Rule execution result action in NeoFS EACL. Either allows or denies access if the rule's filters match.",
+      "description": "Rule execution result action in FrostFS EACL. Either allows or denies access if the rule's filters match.",
       "type": "string",
       "enum": [
         "ALLOW",
@@ -2599,7 +2599,7 @@ func init() {
       ]
     },
     "Address": {
-      "description": "Address of the object in NeoFS.",
+      "description": "Address of the object in FrostFS.",
       "type": "object",
       "required": [
         "containerId",
@@ -2865,7 +2865,7 @@ func init() {
       }
     },
     "Eacl": {
-      "description": "EACL NeoFS table.",
+      "description": "EACL FrostFS table.",
       "type": "object",
       "required": [
         "records"
@@ -2938,7 +2938,7 @@ func init() {
       ]
     },
     "Filter": {
-      "description": "Filter in NeoFS EACL to check particular properties of the request or the object.",
+      "description": "Filter in FrostFS EACL to check particular properties of the request or the object.",
       "type": "object",
       "required": [
         "headerType",
@@ -2968,7 +2968,7 @@ func init() {
       }
     },
     "HeaderType": {
-      "description": "Enumeration of possible sources of Headers to apply filters in NeoFS EACL.",
+      "description": "Enumeration of possible sources of Headers to apply filters in FrostFS EACL.",
       "type": "string",
       "enum": [
         "REQUEST",
@@ -2977,7 +2977,7 @@ func init() {
       ]
     },
     "MatchType": {
-      "description": "Match type in NeoFS EACL filter.",
+      "description": "Match type in FrostFS EACL filter.",
       "type": "string",
       "enum": [
         "STRING_EQUAL",
@@ -3141,7 +3141,7 @@ func init() {
       }
     },
     "Operation": {
-      "description": "Request's operation type to match in NeoFS EACL if the rule is applicable to a particular request.",
+      "description": "Request's operation type to match in FrostFS EACL if the rule is applicable to a particular request.",
       "type": "string",
       "enum": [
         "GET",
@@ -3157,7 +3157,7 @@ func init() {
       "type": "string"
     },
     "Record": {
-      "description": "A single NeoFS EACL rule.",
+      "description": "A single FrostFS EACL rule.",
       "type": "object",
       "required": [
         "action",
@@ -3414,14 +3414,14 @@ func init() {
     "signatureScheme": {
       "type": "boolean",
       "default": false,
-      "description": "Use wallet connect signature scheme or native NeoFS signature.",
+      "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
     }
   },
   "securityDefinitions": {
     "BearerAuth": {
-      "description": "Bearer token body to provide with NeoFS request. Must have 'Bearer ' prefix.",
+      "description": "Bearer token body to provide with FrostFS request. Must have 'Bearer ' prefix.",
       "type": "apiKey",
       "name": "Authorization",
       "in": "header"

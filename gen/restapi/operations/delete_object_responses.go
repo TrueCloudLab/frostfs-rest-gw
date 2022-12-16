@@ -16,8 +16,7 @@ import (
 // DeleteObjectOKCode is the HTTP code returned for type DeleteObjectOK
 const DeleteObjectOKCode int = 200
 
-/*
-DeleteObjectOK Successful deletion.
+/*DeleteObjectOK Successful deletion.
 
 swagger:response deleteObjectOK
 */
@@ -83,8 +82,7 @@ func (o *DeleteObjectOK) WriteResponse(rw http.ResponseWriter, producer runtime.
 // DeleteObjectBadRequestCode is the HTTP code returned for type DeleteObjectBadRequest
 const DeleteObjectBadRequestCode int = 400
 
-/*
-DeleteObjectBadRequest Bad request.
+/*DeleteObjectBadRequest Bad request.
 
 swagger:response deleteObjectBadRequest
 */

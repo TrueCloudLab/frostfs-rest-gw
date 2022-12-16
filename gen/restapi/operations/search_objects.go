@@ -31,10 +31,10 @@ func NewSearchObjects(ctx *middleware.Context, handler SearchObjectsHandler) *Se
 	return &SearchObjects{Context: ctx, Handler: handler}
 }
 
-/*
-	SearchObjects swagger:route POST /objects/{containerId}/search searchObjects
+/* SearchObjects swagger:route POST /objects/{containerId}/search searchObjects
 
 Search objects by filters
+
 */
 type SearchObjects struct {
 	Context *middleware.Context

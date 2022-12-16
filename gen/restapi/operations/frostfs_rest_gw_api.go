@@ -117,7 +117,7 @@ func NewFrostfsRestGwAPI(spec *loads.Document) *FrostfsRestGwAPI {
 	}
 }
 
-/*FrostfsRestGwAPI REST API for native integration with NeoFS. */
+/*FrostfsRestGwAPI REST API for native integration with FrostFS. */
 type FrostfsRestGwAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
