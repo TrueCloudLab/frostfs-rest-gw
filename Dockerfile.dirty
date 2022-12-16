@@ -3,6 +3,6 @@ RUN apk add --update --no-cache bash ca-certificates
 
 WORKDIR /
 
-COPY bin/neofs-rest-gw /bin/neofs-rest-gw
+COPY bin/frostfs-rest-gw /bin/frostfs-rest-gw
 
-CMD ["neofs-rest-gw"]
+CMD ["frostfs-rest-gw"]

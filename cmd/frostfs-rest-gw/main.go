@@ -20,7 +20,7 @@ func main() {
 
 	neofsAPI, err := newNeofsAPI(ctx, logger, v)
 	if err != nil {
-		logger.Fatal("init neofs", zap.Error(err))
+		logger.Fatal("init frostfs", zap.Error(err))
 	}
 
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
