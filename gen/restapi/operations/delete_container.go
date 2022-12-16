@@ -31,10 +31,10 @@ func NewDeleteContainer(ctx *middleware.Context, handler DeleteContainerHandler)
 	return &DeleteContainer{Context: ctx, Handler: handler}
 }
 
-/*
-	DeleteContainer swagger:route DELETE /containers/{containerId} deleteContainer
+/* DeleteContainer swagger:route DELETE /containers/{containerId} deleteContainer
 
 Delete container by id
+
 */
 type DeleteContainer struct {
 	Context *middleware.Context

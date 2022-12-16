@@ -66,7 +66,7 @@ type PutObjectParams struct {
 	  In: body
 	*/
 	Object *models.ObjectUpload
-	/*Use wallet connect signature scheme or native NeoFS signature.
+	/*Use wallet connect signature scheme or native FrostFS signature.
 	  In: query
 	  Default: false
 	*/

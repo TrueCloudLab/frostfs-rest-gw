@@ -31,10 +31,10 @@ func NewPutContainerEACL(ctx *middleware.Context, handler PutContainerEACLHandle
 	return &PutContainerEACL{Context: ctx, Handler: handler}
 }
 
-/*
-	PutContainerEACL swagger:route PUT /containers/{containerId}/eacl putContainerEAcl
+/* PutContainerEACL swagger:route PUT /containers/{containerId}/eacl putContainerEAcl
 
 Set container EACL by id
+
 */
 type PutContainerEACL struct {
 	Context *middleware.Context

@@ -16,8 +16,7 @@ import (
 // FormBinaryBearerOKCode is the HTTP code returned for type FormBinaryBearerOK
 const FormBinaryBearerOKCode int = 200
 
-/*
-FormBinaryBearerOK Base64 encoded stable binary marshaled bearer token.
+/*FormBinaryBearerOK Base64 encoded stable binary marshaled bearer token.
 
 swagger:response formBinaryBearerOK
 */
@@ -83,8 +82,7 @@ func (o *FormBinaryBearerOK) WriteResponse(rw http.ResponseWriter, producer runt
 // FormBinaryBearerBadRequestCode is the HTTP code returned for type FormBinaryBearerBadRequest
 const FormBinaryBearerBadRequestCode int = 400
 
-/*
-FormBinaryBearerBadRequest Bad request
+/*FormBinaryBearerBadRequest Bad request
 
 swagger:response formBinaryBearerBadRequest
 */

@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Operation Request's operation type to match in NeoFS EACL if the rule is applicable to a particular request.
+// Operation Request's operation type to match in FrostFS EACL if the rule is applicable to a particular request.
 //
 // swagger:model Operation
 type Operation string

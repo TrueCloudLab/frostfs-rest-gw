@@ -66,7 +66,7 @@ type DeleteObjectParams struct {
 	  In: path
 	*/
 	ObjectID string
-	/*Use wallet connect signature scheme or native NeoFS signature.
+	/*Use wallet connect signature scheme or native FrostFS signature.
 	  In: query
 	  Default: false
 	*/

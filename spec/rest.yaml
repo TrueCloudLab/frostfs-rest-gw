@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
-  title: REST API NeoFS
-  description: REST API for native integration with NeoFS.
+  title: REST API FrostFS
+  description: REST API for native integration with FrostFS.
   version: v1
 
 host: localhost:8090
@@ -14,7 +14,7 @@ securityDefinitions:
     type: apiKey
     in: header
     name: Authorization
-    description: Bearer token body to provide with NeoFS request. Must have 'Bearer ' prefix.
+    description: Bearer token body to provide with FrostFS request. Must have 'Bearer ' prefix.
 
 security:
   - BearerAuth: [ ]
@@ -35,7 +35,7 @@ parameters:
   signatureScheme:
     in: query
     name: walletConnect
-    description: Use wallet connect signature scheme or native NeoFS signature.
+    description: Use wallet connect signature scheme or native FrostFS signature.
     type: boolean
     default: false
   fullBearerToken:
@@ -154,8 +154,8 @@ paths:
   /accounting/balance/{address}:
     get:
       operationId: getBalance
-      summary: Get balance in NeoFS
-      description: Getting balance of provided wallet address in NeoFS.
+      summary: Get balance in FrostFS
+      description: Getting balance of provided wallet address in FrostFS.
       security: [ ]
       parameters:
         - in: path
@@ -167,7 +167,7 @@ paths:
         - application/json
       responses:
         200:
-          description: Balance of address in NeoFS
+          description: Balance of address in FrostFS
           schema:
             $ref: '#/definitions/Balance'
           headers:
@@ -194,7 +194,7 @@ paths:
               type: string
     put:
       operationId: putObject
-      summary: Upload object to NeoFS
+      summary: Upload object to FrostFS
       parameters:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
@@ -341,7 +341,7 @@ paths:
             $ref: '#/definitions/ErrorResponse'
     delete:
       operationId: deleteObject
-      summary: Remove object from NeoFS
+      summary: Remove object from FrostFS
       parameters:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
@@ -376,7 +376,7 @@ paths:
               type: string
     put:
       operationId: putContainer
-      summary: Create new container in NeoFS
+      summary: Create new container in FrostFS
       parameters:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
@@ -594,7 +594,7 @@ definitions:
         container:
           verb: PUT
   Record:
-    description: A single NeoFS EACL rule.
+    description: A single FrostFS EACL rule.
     type: object
     properties:
       action:
@@ -622,13 +622,13 @@ definitions:
         - role: OTHERS
           keys: [ ]
   Action:
-    description: Rule execution result action in NeoFS EACL. Either allows or denies access if the rule's filters match.
+    description: Rule execution result action in FrostFS EACL. Either allows or denies access if the rule's filters match.
     type: string
     enum:
       - ALLOW
       - DENY
   Operation:
-    description: Request's operation type to match in NeoFS EACL if the rule is applicable to a particular request.
+    description: Request's operation type to match in FrostFS EACL if the rule is applicable to a particular request.
     type: string
     enum:
       - GET
@@ -639,7 +639,7 @@ definitions:
       - RANGE
       - RANGEHASH
   Filter:
-    description: Filter in NeoFS EACL to check particular properties of the request or the object.
+    description: Filter in FrostFS EACL to check particular properties of the request or the object.
     type: object
     properties:
       headerType:
@@ -661,14 +661,14 @@ definitions:
       key: FileName
       value: myfile
   HeaderType:
-    description: Enumeration of possible sources of Headers to apply filters in NeoFS EACL.
+    description: Enumeration of possible sources of Headers to apply filters in FrostFS EACL.
     type: string
     enum:
       - REQUEST
       - OBJECT
       - SERVICE
   MatchType:
-    description: Match type in NeoFS EACL filter.
+    description: Match type in FrostFS EACL filter.
     type: string
     enum:
       - STRING_EQUAL
@@ -992,7 +992,7 @@ definitions:
         - key: Name
           value: object
   Address:
-    description: Address of the object in NeoFS.
+    description: Address of the object in FrostFS.
     type: object
     properties:
       containerId:
@@ -1006,7 +1006,7 @@ definitions:
       objectId: 8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
       containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
   Eacl:
-    description: EACL NeoFS table.
+    description: EACL FrostFS table.
     type: object
     properties:
       containerId:

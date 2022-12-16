@@ -14,8 +14,7 @@ import (
 // OptionsObjectsSearchOKCode is the HTTP code returned for type OptionsObjectsSearchOK
 const OptionsObjectsSearchOKCode int = 200
 
-/*
-OptionsObjectsSearchOK Base64 encoded stable binary marshaled bearer token.
+/*OptionsObjectsSearchOK Base64 encoded stable binary marshaled bearer token.
 
 swagger:response optionsObjectsSearchOK
 */

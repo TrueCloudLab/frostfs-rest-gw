@@ -29,10 +29,10 @@ func NewListContainers(ctx *middleware.Context, handler ListContainersHandler) *
 	return &ListContainers{Context: ctx, Handler: handler}
 }
 
-/*
-	ListContainers swagger:route GET /containers listContainers
+/* ListContainers swagger:route GET /containers listContainers
 
 Get list of containers
+
 */
 type ListContainers struct {
 	Context *middleware.Context

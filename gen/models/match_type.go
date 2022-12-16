@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// MatchType Match type in NeoFS EACL filter.
+// MatchType Match type in FrostFS EACL filter.
 //
 // swagger:model MatchType
 type MatchType string

@@ -16,8 +16,7 @@ import (
 // GetContainerEACLOKCode is the HTTP code returned for type GetContainerEACLOK
 const GetContainerEACLOKCode int = 200
 
-/*
-GetContainerEACLOK Container EACL information.
+/*GetContainerEACLOK Container EACL information.
 
 swagger:response getContainerEAclOK
 */
@@ -83,8 +82,7 @@ func (o *GetContainerEACLOK) WriteResponse(rw http.ResponseWriter, producer runt
 // GetContainerEACLBadRequestCode is the HTTP code returned for type GetContainerEACLBadRequest
 const GetContainerEACLBadRequestCode int = 400
 
-/*
-GetContainerEACLBadRequest Bad request.
+/*GetContainerEACLBadRequest Bad request.
 
 swagger:response getContainerEAclBadRequest
 */

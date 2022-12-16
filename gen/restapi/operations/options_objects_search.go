@@ -29,10 +29,10 @@ func NewOptionsObjectsSearch(ctx *middleware.Context, handler OptionsObjectsSear
 	return &OptionsObjectsSearch{Context: ctx, Handler: handler}
 }
 
-/*
-	OptionsObjectsSearch swagger:route OPTIONS /objects/{containerId}/search optionsObjectsSearch
+/* OptionsObjectsSearch swagger:route OPTIONS /objects/{containerId}/search optionsObjectsSearch
 
 OptionsObjectsSearch options objects search API
+
 */
 type OptionsObjectsSearch struct {
 	Context *middleware.Context

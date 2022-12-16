@@ -14,8 +14,7 @@ import (
 // OptionsContainersPutListOKCode is the HTTP code returned for type OptionsContainersPutListOK
 const OptionsContainersPutListOKCode int = 200
 
-/*
-OptionsContainersPutListOK CORS
+/*OptionsContainersPutListOK CORS
 
 swagger:response optionsContainersPutListOK
 */

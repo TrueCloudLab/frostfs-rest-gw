@@ -16,8 +16,7 @@ import (
 // PutContainerEACLOKCode is the HTTP code returned for type PutContainerEACLOK
 const PutContainerEACLOKCode int = 200
 
-/*
-PutContainerEACLOK Successful EACL updating.
+/*PutContainerEACLOK Successful EACL updating.
 
 swagger:response putContainerEAclOK
 */
@@ -83,8 +82,7 @@ func (o *PutContainerEACLOK) WriteResponse(rw http.ResponseWriter, producer runt
 // PutContainerEACLBadRequestCode is the HTTP code returned for type PutContainerEACLBadRequest
 const PutContainerEACLBadRequestCode int = 400
 
-/*
-PutContainerEACLBadRequest Bad request.
+/*PutContainerEACLBadRequest Bad request.
 
 swagger:response putContainerEAclBadRequest
 */

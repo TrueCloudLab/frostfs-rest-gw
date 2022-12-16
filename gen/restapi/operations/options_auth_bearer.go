@@ -29,10 +29,10 @@ func NewOptionsAuthBearer(ctx *middleware.Context, handler OptionsAuthBearerHand
 	return &OptionsAuthBearer{Context: ctx, Handler: handler}
 }
 
-/*
-	OptionsAuthBearer swagger:route OPTIONS /auth/bearer optionsAuthBearer
+/* OptionsAuthBearer swagger:route OPTIONS /auth/bearer optionsAuthBearer
 
 OptionsAuthBearer options auth bearer API
+
 */
 type OptionsAuthBearer struct {
 	Context *middleware.Context

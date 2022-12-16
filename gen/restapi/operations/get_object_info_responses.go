@@ -16,8 +16,7 @@ import (
 // GetObjectInfoOKCode is the HTTP code returned for type GetObjectInfoOK
 const GetObjectInfoOKCode int = 200
 
-/*
-GetObjectInfoOK Object info
+/*GetObjectInfoOK Object info
 
 swagger:response getObjectInfoOK
 */
@@ -83,8 +82,7 @@ func (o *GetObjectInfoOK) WriteResponse(rw http.ResponseWriter, producer runtime
 // GetObjectInfoBadRequestCode is the HTTP code returned for type GetObjectInfoBadRequest
 const GetObjectInfoBadRequestCode int = 400
 
-/*
-GetObjectInfoBadRequest Bad request
+/*GetObjectInfoBadRequest Bad request
 
 swagger:response getObjectInfoBadRequest
 */

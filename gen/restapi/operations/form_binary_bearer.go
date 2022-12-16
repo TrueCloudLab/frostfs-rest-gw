@@ -31,10 +31,10 @@ func NewFormBinaryBearer(ctx *middleware.Context, handler FormBinaryBearerHandle
 	return &FormBinaryBearer{Context: ctx, Handler: handler}
 }
 
-/*
-	FormBinaryBearer swagger:route GET /auth/bearer formBinaryBearer
+/* FormBinaryBearer swagger:route GET /auth/bearer formBinaryBearer
 
 Form binary bearer token
+
 */
 type FormBinaryBearer struct {
 	Context *middleware.Context
