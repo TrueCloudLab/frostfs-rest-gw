@@ -1,18 +1,18 @@
 <p align="center">
-<img src="./.github/logo.svg" width="500px" alt="NeoFS">
+<img src="./.github/logo.svg" width="500px" alt="FrostFS">
 </p>
 <p align="center">
-  REST server to interact with <a href="https://fs.neo.org">NeoFS</a>.
+  REST server to interact with <a href="https://frostfs.info">FrostFS</a>.
 </p>
 
 ---
-[![Report](https://goreportcard.com/badge/github.com/nspcc-dev/neofs-rest-gw)](https://goreportcard.com/report/github.com/nspcc-dev/neofs-rest-gw)
-![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/nspcc-dev/neofs-rest-gw?sort=semver)
-![License](https://img.shields.io/github/license/nspcc-dev/neofs-rest-gw.svg?style=popout)
+[![Report](https://goreportcard.com/badge/github.com/TrueCloudLab/frostfs-rest-gw)](https://goreportcard.com/report/github.com/TrueCloudLab/frostfs-rest-gw)
+![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/TrueCloudLab/frostfs-rest-gw?sort=semver)
+![License](https://img.shields.io/github/license/TrueCloudLab/frostfs-rest-gw.svg?style=popout)
 
-# neofs-rest-gw
+# frostfs-rest-gw
 
-NeoFS REST Gateway bridges NeoFS internal protocol and REST API server.
+FrostFS REST Gateway bridges FrostFS internal protocol and REST API server.
 
 ## Installation
 
@@ -29,10 +29,10 @@ Before building make sure you have the following tools:
 First clone this repository:
 
 ```shell
-$ git clone https://github.com/nspcc-dev/neofs-rest-gw
+$ git clone https://github.com/TrueCloudLab/frostfs-rest-gw
 ```
 
-Then run make to build `bin/neofs-rest-gw` binary:
+Then run make to build `bin/frostfs-rest-gw` binary:
 
 ```shell
 $ make
@@ -89,11 +89,11 @@ Or you can also use a [Docker image](https://hub.docker.com/r/nspccdev/neofs-res
 
 ## Execution
 
-REST gateway itself is not a NeoFS node, so to access NeoFS it uses node's gRPC interface and you need to provide some
+REST gateway itself is not a FrostFS node, so to access FrostFS it uses node's gRPC interface and you need to provide some
 node that it will connect to. This can be done either via `-p` parameter or via `REST_GW_POOL_PEERS_<N>_ADDRESS` and
-`REST_GW_POOL_PEERS_<N>_WEIGHT` environment variables (the gate supports multiple NeoFS nodes with weighted load balancing).
+`REST_GW_POOL_PEERS_<N>_WEIGHT` environment variables (the gate supports multiple FrostFS nodes with weighted load balancing).
 
-If you're launching REST gateway in bundle with [neofs-dev-env](https://github.com/nspcc-dev/neofs-dev-env), you can get
+If you're launching REST gateway in bundle with [frostfs-dev-env](https://github.com/TrueCloudLab/frostfs-dev-env), you can get
 an IP address of the node in output of `make hosts` command
 (with s0*.neofs.devenv name).
 
@@ -101,15 +101,15 @@ These two commands are functionally equivalent, they run the gate with one backe
 settings):
 
 ```shell
-$ neofs-rest-gw -p 192.168.130.72:8080
-$ REST_GW_POOL_PEERS_0_ADDRESS=192.168.130.72:8080 neofs-rest-gw
+$ frostfs-rest-gw -p 192.168.130.72:8080
+$ REST_GW_POOL_PEERS_0_ADDRESS=192.168.130.72:8080 frostfs-rest-gw
 ```
 
 It's also possible to specify uri scheme (grpc or grpcs) when using `-p`:
 
 ```shell
-$ neofs-rest-gw -p grpc://192.168.130.72:8080
-$ REST_GW_POOL_PEERS_0_ADDRESS=grpcs://192.168.130.72:8080 neofs-rest-gw
+$ frostfs-rest-gw -p grpc://192.168.130.72:8080
+$ REST_GW_POOL_PEERS_0_ADDRESS=grpcs://192.168.130.72:8080 frostfs-rest-gw
 ```
 
 ## Configuration
@@ -119,7 +119,7 @@ specifically mentioned in most cases (see `--help` also). If you prefer a config
 See [config](./config/config.yaml) and [defaults](./docs/gate-configuration.md) for example.
 
 ```shell
-$ neofs-rest-gw --config config.yaml
+$ frostfs-rest-gw --config config.yaml
 ```
 
 ## Docs
