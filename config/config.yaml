@@ -28,13 +28,13 @@ pool:
   error-threshold: 100
 
   # Nodes configuration.
-  # This configuration make gateway use the first node (grpc://s01.neofs.devenv:8080)
-  # while it's healthy. Otherwise, gateway use the second node (grpc://s01.neofs.devenv:8080)
+  # This configuration make gateway use the first node (grpc://s01.frostfs.devenv:8080)
+  # while it's healthy. Otherwise, gateway use the second node (grpc://s01.frostfs.devenv:8080)
   # for 10% of requests and the third node for 90% of requests.
   peers:
     0:
       # Endpoint.
-      address: grpc://s01.neofs.devenv:8080
+      address: grpc://s01.frostfs.devenv:8080
       # Until nodes with the same priority level are healthy
       # nodes with other priority are not used.
       # Еhe lower the value, the higher the priority.
@@ -42,11 +42,11 @@ pool:
       # Load distribution proportion for nodes with the same priority.
       weight: 1
     1:
-      address: grpc://s02.neofs.devenv:8080
+      address: grpc://s02.frostfs.devenv:8080
       priority: 2
       weight: 1
     2:
-      address: grpc://s03.neofs.devenv:8080
+      address: grpc://s03.frostfs.devenv:8080
       priority: 2
       weight: 9
 

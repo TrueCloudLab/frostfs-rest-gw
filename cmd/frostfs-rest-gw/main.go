@@ -18,7 +18,7 @@ func main() {
 	logger := newLogger(v)
 	validateConfig(v, logger)
 
-	neofsAPI, err := newNeofsAPI(ctx, logger, v)
+	frostfsAPI, err := newFrostfsAPI(ctx, logger, v)
 	if err != nil {
 		logger.Fatal("init frostfs", zap.Error(err))
 	}
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	serverCfg := serverConfig(v)
-	serverCfg.SuccessfulStartCallback = neofsAPI.StartCallback
+	serverCfg.SuccessfulStartCallback = frostfsAPI.StartCallback
 
 	api := operations.NewFrostfsRestGwAPI(swaggerSpec)
 	server := restapi.NewServer(api, serverCfg)
@@ -39,8 +39,8 @@ func main() {
 		}
 	}()
 
-	server.ConfigureAPI(neofsAPI.Configure)
-	neofsAPI.RunServices()
+	server.ConfigureAPI(frostfsAPI.Configure)
+	frostfsAPI.RunServices()
 
 	// serve API
 	if err = server.Serve(); err != nil {

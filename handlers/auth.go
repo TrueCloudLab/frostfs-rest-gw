@@ -11,7 +11,7 @@ import (
 	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
 	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
-	neofsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
+	frostfsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
 	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
 	"github.com/TrueCloudLab/frostfs-sdk-go/user"
 	"github.com/go-openapi/runtime/middleware"
@@ -167,7 +167,7 @@ func prepareContainerTokens(ctx context.Context, params containerTokenParams, po
 	stoken.SetIat(iat)
 	stoken.SetExp(exp)
 
-	authKey := neofsecdsa.PublicKey(*key)
+	authKey := frostfsecdsa.PublicKey(*key)
 	stoken.SetAuthKey(&authKey)
 
 	var v2token sessionv2.Token

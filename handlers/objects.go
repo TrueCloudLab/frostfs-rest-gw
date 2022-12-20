@@ -28,7 +28,7 @@ const (
 	attributeFilePath = "FilePath"
 )
 
-// PutObjects handler that uploads object to NeoFS.
+// PutObjects handler that uploads object to FrostFS.
 func (a *API) PutObjects(params operations.PutObjectParams, principal *models.Principal) middleware.Responder {
 	errorResponse := operations.NewPutObjectBadRequest()
 	ctx := params.HTTPRequest.Context()
@@ -180,7 +180,7 @@ func (a *API) GetObjectInfo(params operations.GetObjectInfoParams, principal *mo
 		WithAccessControlAllowOrigin("*")
 }
 
-// DeleteObject handler that removes object from NeoFS.
+// DeleteObject handler that removes object from FrostFS.
 func (a *API) DeleteObject(params operations.DeleteObjectParams, principal *models.Principal) middleware.Responder {
 	errorResponse := operations.NewDeleteObjectBadRequest()
 	ctx := params.HTTPRequest.Context()
@@ -211,7 +211,7 @@ func (a *API) DeleteObject(params operations.DeleteObjectParams, principal *mode
 		WithAccessControlAllowOrigin("*")
 }
 
-// SearchObjects handler that removes object from NeoFS.
+// SearchObjects handler that removes object from FrostFS.
 func (a *API) SearchObjects(params operations.SearchObjectsParams, principal *models.Principal) middleware.Responder {
 	errorResponse := operations.NewSearchObjectsBadRequest()
 	ctx := params.HTTPRequest.Context()
