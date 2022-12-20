@@ -292,7 +292,7 @@ func isValidPeerKey(key string) (int, bool) {
 	return num, true
 }
 
-func getNeoFSKey(logger *zap.Logger, cfg *viper.Viper) (*keys.PrivateKey, error) {
+func getFrostFSKey(logger *zap.Logger, cfg *viper.Viper) (*keys.PrivateKey, error) {
 	walletPath := cfg.GetString(cmdWallet)
 	if len(walletPath) == 0 {
 		walletPath = cfg.GetString(cfgWalletPath)
@@ -418,8 +418,8 @@ func serverConfig(v *viper.Viper) *restapi.ServerConfig {
 	}
 }
 
-func newNeofsAPI(ctx context.Context, logger *zap.Logger, v *viper.Viper) (*handlers.API, error) {
-	key, err := getNeoFSKey(logger, v)
+func newFrostfsAPI(ctx context.Context, logger *zap.Logger, v *viper.Viper) (*handlers.API, error) {
+	key, err := getFrostFSKey(logger, v)
 	if err != nil {
 		return nil, err
 	}

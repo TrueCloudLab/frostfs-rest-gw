@@ -35,7 +35,7 @@ const (
 	attributeTimestamp     = "Timestamp"
 )
 
-// PutContainers handler that creates container in NeoFS.
+// PutContainers handler that creates container in FrostFS.
 func (a *API) PutContainers(params operations.PutContainerParams, principal *models.Principal) middleware.Responder {
 	st, err := formSessionTokenFromHeaders(principal, params.XBearerSignature, params.XBearerSignatureKey, sessionv2.ContainerVerbPut)
 	if err != nil {

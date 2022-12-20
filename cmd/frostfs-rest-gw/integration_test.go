@@ -23,7 +23,7 @@ import (
 	"github.com/TrueCloudLab/frostfs-sdk-go/container"
 	"github.com/TrueCloudLab/frostfs-sdk-go/container/acl"
 	cid "github.com/TrueCloudLab/frostfs-sdk-go/container/id"
-	neofsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
+	frostfsecdsa "github.com/TrueCloudLab/frostfs-sdk-go/crypto/ecdsa"
 	"github.com/TrueCloudLab/frostfs-sdk-go/eacl"
 	"github.com/TrueCloudLab/frostfs-sdk-go/netmap"
 	"github.com/TrueCloudLab/frostfs-sdk-go/object"
@@ -43,7 +43,7 @@ const (
 	testListenAddress = "localhost:8082"
 	testHost          = "http://" + testListenAddress
 	testContainerNode = "localhost:8080"
-	testLocalNode     = "s01.neofs.devenv:8080"
+	testLocalNode     = "s01.frostfs.devenv:8080"
 	containerName     = "test-container"
 	localVersion      = "local"
 
@@ -160,7 +160,7 @@ func runServer(ctx context.Context, t *testing.T, node string) context.CancelFun
 	v := getDefaultConfig(node)
 	l := newLogger(v)
 
-	neofsAPI, err := newNeofsAPI(cancelCtx, l, v)
+	frostfsAPI, err := newFrostfsAPI(cancelCtx, l, v)
 	require.NoError(t, err)
 
 	swaggerSpec, err := loads.Analyzed(restapi.SwaggerJSON, "")
@@ -169,7 +169,7 @@ func runServer(ctx context.Context, t *testing.T, node string) context.CancelFun
 	api := operations.NewFrostfsRestGwAPI(swaggerSpec)
 	server := restapi.NewServer(api, serverConfig(v))
 
-	server.ConfigureAPI(neofsAPI.Configure)
+	server.ConfigureAPI(frostfsAPI.Configure)
 
 	go func() {
 		err := server.Serve()
@@ -1126,7 +1126,7 @@ func makeAuthTokenRequest(ctx context.Context, t *testing.T, bearers []*models.B
 }
 
 func signToken(t *testing.T, key *keys.PrivateKey, data []byte) *handlers.BearerToken {
-	signer := neofsecdsa.Signer(key.PrivateKey)
+	signer := frostfsecdsa.Signer(key.PrivateKey)
 	sign, err := signer.Sign(data)
 	require.NoError(t, err)
 
@@ -1138,7 +1138,7 @@ func signToken(t *testing.T, key *keys.PrivateKey, data []byte) *handlers.Bearer
 }
 
 func signTokenWalletConnect(t *testing.T, key *keys.PrivateKey, data []byte) *handlers.BearerToken {
-	signer := neofsecdsa.SignerWalletConnect(key.PrivateKey)
+	signer := frostfsecdsa.SignerWalletConnect(key.PrivateKey)
 	signature, err := signer.Sign(data)
 	require.NoError(t, err)
 

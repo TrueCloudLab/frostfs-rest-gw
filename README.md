@@ -93,7 +93,7 @@ node that it will connect to. This can be done either via `-p` parameter or via 
 
 If you're launching REST gateway in bundle with [frostfs-dev-env](https://github.com/TrueCloudLab/frostfs-dev-env), you can get
 an IP address of the node in output of `make hosts` command
-(with s0*.neofs.devenv name).
+(with s0*.frostfs.devenv name).
 
 These two commands are functionally equivalent, they run the gate with one backend node (and otherwise default
 settings):

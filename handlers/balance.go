@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 )
 
-// Balance handler that get balance from NeoFS.
+// Balance handler that get balance from FrostFS.
 func (a *API) Balance(params operations.GetBalanceParams) middleware.Responder {
 	var ownerID user.ID
 	if err := ownerID.DecodeString(params.Address); err != nil {
@@ -22,7 +22,7 @@ func (a *API) Balance(params operations.GetBalanceParams) middleware.Responder {
 	var prm pool.PrmBalanceGet
 	prm.SetAccount(ownerID)
 
-	neofsBalance, err := a.pool.Balance(params.HTTPRequest.Context(), prm)
+	frostfsBalance, err := a.pool.Balance(params.HTTPRequest.Context(), prm)
 	if err != nil {
 		resp := a.logAndGetErrorResponse("get balance", err)
 		return operations.NewGetBalanceBadRequest().WithPayload(resp)
@@ -30,8 +30,8 @@ func (a *API) Balance(params operations.GetBalanceParams) middleware.Responder {
 
 	var resp models.Balance
 	resp.Address = util.NewString(params.Address)
-	resp.Value = util.NewString(strconv.FormatInt(neofsBalance.Value(), 10))
-	resp.Precision = util.NewInteger(int64(neofsBalance.Precision()))
+	resp.Value = util.NewString(strconv.FormatInt(frostfsBalance.Value(), 10))
+	resp.Precision = util.NewInteger(int64(frostfsBalance.Precision()))
 
 	return operations.NewGetBalanceOK().
 		WithPayload(&resp).
