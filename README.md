@@ -1,4 +1,6 @@
-
+<p align="center">
+<img src="./.github/logo.svg" width="500px" alt="FrostFS">
+</p>
 <p align="center">
   REST server to interact with <a href="https://frostfs.info">FrostFS</a>.
 </p>
