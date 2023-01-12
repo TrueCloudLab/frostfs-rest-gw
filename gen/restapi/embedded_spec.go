@@ -523,6 +523,160 @@ func init() {
         }
       ]
     },
+    "/containers/{containerId}/storagegroups": {
+      "get": {
+        "summary": "Find all storage groups in container.",
+        "operationId": "listStorageGroups",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of storage groups.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroupList"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Create a new storage group in container.",
+        "operationId": "putStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
+          },
+          {
+            "description": "Storage group co create.",
+            "name": "storageGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StorageGroupPutBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address of uploaded storage group.",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/containerId"
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups/{storageGroupId}": {
+      "get": {
+        "summary": "Get storage group info.",
+        "operationId": "getStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Storage group information.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete storage group from container.",
+        "operationId": "deleteStorageGroup",
+        "parameters": [
+          {
+            "$ref": "#/parameters/signatureParam"
+          },
+          {
+            "$ref": "#/parameters/signatureKeyParam"
+          },
+          {
+            "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful deletion.",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "$ref": "#/parameters/containerId"
+        },
+        {
+          "$ref": "#/parameters/storageGroupId"
+        }
+      ]
+    },
     "/objects": {
       "put": {
         "consumes": [
@@ -1522,6 +1676,148 @@ func init() {
         "MatchCommonPrefix"
       ]
     },
+    "StorageGroup": {
+      "description": "Storage group keeps verification information for Data Audit sessions.",
+      "type": "object",
+      "required": [
+        "address",
+        "expirationEpoch",
+        "size",
+        "members"
+      ],
+      "properties": {
+        "address": {
+          "description": "Address of storage group object. Set by server.",
+          "$ref": "#/definitions/Address",
+          "readOnly": true
+        },
+        "expirationEpoch": {
+          "description": "Expiration epoch of storage group.",
+          "type": "string"
+        },
+        "hash": {
+          "description": "Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.",
+          "type": "string"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        },
+        "size": {
+          "description": "Total size of the payloads of objects in the storage group.",
+          "type": "string"
+        }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group",
+        "size": 4096
+      }
+    },
+    "StorageGroupBaseInfo": {
+      "description": "Storage group info for listing.",
+      "type": "object",
+      "required": [
+        "address",
+        "expirationEpoch"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "expirationEpoch": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "name": "my-storage-group"
+      }
+    },
+    "StorageGroupList": {
+      "description": "List of storage groups.",
+      "type": "object",
+      "required": [
+        "size",
+        "storageGroups"
+      ],
+      "properties": {
+        "size": {
+          "type": "integer"
+        },
+        "storageGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StorageGroupBaseInfo"
+          }
+        }
+      },
+      "example": {
+        "size": 1,
+        "storageGroups": [
+          {
+            "address": {
+              "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+              "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+            },
+            "expirationEpoch": 5000,
+            "name": "my-storage-group"
+          }
+        ]
+      }
+    },
+    "StorageGroupPutBody": {
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        }
+      },
+      "example": {
+        "lifetime": 100,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group"
+      }
+    },
     "SuccessResponse": {
       "description": "Success response.",
       "type": "object",
@@ -1649,6 +1945,13 @@ func init() {
       "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
+    },
+    "storageGroupId": {
+      "type": "string",
+      "description": "Base58 encoded storage group id.",
+      "name": "storageGroupId",
+      "in": "path",
+      "required": true
     }
   },
   "securityDefinitions": {
@@ -2215,6 +2518,228 @@ func init() {
           "type": "string",
           "description": "Base58 encoded container id.",
           "name": "containerId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups": {
+      "get": {
+        "summary": "Find all storage groups in container.",
+        "operationId": "listStorageGroups",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of storage groups.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroupList"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Create a new storage group in container.",
+        "operationId": "putStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
+            "in": "query"
+          },
+          {
+            "description": "Storage group co create.",
+            "name": "storageGroup",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/StorageGroupPutBody"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Address of uploaded storage group.",
+            "schema": {
+              "$ref": "#/definitions/Address"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Base58 encoded container id.",
+          "name": "containerId",
+          "in": "path",
+          "required": true
+        }
+      ]
+    },
+    "/containers/{containerId}/storagegroups/{storageGroupId}": {
+      "get": {
+        "summary": "Get storage group info.",
+        "operationId": "getStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Storage group information.",
+            "schema": {
+              "$ref": "#/definitions/StorageGroup"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete storage group from container.",
+        "operationId": "deleteStorageGroup",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Base64 encoded signature for bearer token.",
+            "name": "X-Bearer-Signature",
+            "in": "header"
+          },
+          {
+            "type": "string",
+            "description": "Hex encoded the public part of the key that signed the bearer token.",
+            "name": "X-Bearer-Signature-Key",
+            "in": "header"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
+            "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful deletion.",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Bad request.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        }
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "description": "Base58 encoded container id.",
+          "name": "containerId",
+          "in": "path",
+          "required": true
+        },
+        {
+          "type": "string",
+          "description": "Base58 encoded storage group id.",
+          "name": "storageGroupId",
           "in": "path",
           "required": true
         }
@@ -3290,6 +3815,148 @@ func init() {
         "MatchCommonPrefix"
       ]
     },
+    "StorageGroup": {
+      "description": "Storage group keeps verification information for Data Audit sessions.",
+      "type": "object",
+      "required": [
+        "address",
+        "expirationEpoch",
+        "size",
+        "members"
+      ],
+      "properties": {
+        "address": {
+          "description": "Address of storage group object. Set by server.",
+          "$ref": "#/definitions/Address",
+          "readOnly": true
+        },
+        "expirationEpoch": {
+          "description": "Expiration epoch of storage group.",
+          "type": "string"
+        },
+        "hash": {
+          "description": "Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.",
+          "type": "string"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        },
+        "size": {
+          "description": "Total size of the payloads of objects in the storage group.",
+          "type": "string"
+        }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group",
+        "size": 4096
+      }
+    },
+    "StorageGroupBaseInfo": {
+      "description": "Storage group info for listing.",
+      "type": "object",
+      "required": [
+        "address",
+        "expirationEpoch"
+      ],
+      "properties": {
+        "address": {
+          "$ref": "#/definitions/Address"
+        },
+        "expirationEpoch": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "name": "my-storage-group"
+      }
+    },
+    "StorageGroupList": {
+      "description": "List of storage groups.",
+      "type": "object",
+      "required": [
+        "size",
+        "storageGroups"
+      ],
+      "properties": {
+        "size": {
+          "type": "integer"
+        },
+        "storageGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/StorageGroupBaseInfo"
+          }
+        }
+      },
+      "example": {
+        "size": 1,
+        "storageGroups": [
+          {
+            "address": {
+              "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+              "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+            },
+            "expirationEpoch": 5000,
+            "name": "my-storage-group"
+          }
+        ]
+      }
+    },
+    "StorageGroupPutBody": {
+      "type": "object",
+      "required": [
+        "lifetime",
+        "members"
+      ],
+      "properties": {
+        "lifetime": {
+          "description": "Lifetime in epochs for storage group.",
+          "type": "integer"
+        },
+        "members": {
+          "description": "Object identifiers to be placed into storage group. Must be unique.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "name": {
+          "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
+          "type": "string"
+        }
+      },
+      "example": {
+        "lifetime": 100,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group"
+      }
+    },
     "SuccessResponse": {
       "description": "Success response.",
       "type": "object",
@@ -3417,6 +4084,13 @@ func init() {
       "description": "Use wallet connect signature scheme or native FrostFS signature.",
       "name": "walletConnect",
       "in": "query"
+    },
+    "storageGroupId": {
+      "type": "string",
+      "description": "Base58 encoded storage group id.",
+      "name": "storageGroupId",
+      "in": "path",
+      "required": true
     }
   },
   "securityDefinitions": {

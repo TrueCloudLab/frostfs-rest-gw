@@ -56,6 +56,12 @@ parameters:
     type: string
     required: true
     description: Base58 encoded object id.
+  storageGroupId:
+    in: path
+    name: storageGroupId
+    type: string
+    required: true
+    description: Base58 encoded storage group id.
 
 paths:
   /auth:
@@ -557,6 +563,89 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResponse'
 
+  /containers/{containerId}/storagegroups:
+    parameters:
+      - $ref: '#/parameters/containerId'
+    put:
+      operationId: putStorageGroup
+      summary: Create a new storage group in container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
+        - in: body
+          name: storageGroup
+          required: true
+          description: Storage group co create.
+          schema:
+            $ref: '#/definitions/StorageGroupPutBody'
+      responses:
+        200:
+          description: Address of uploaded storage group.
+          schema:
+            $ref: '#/definitions/Address'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    get:
+      operationId: listStorageGroups
+      summary: Find all storage groups in container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
+      responses:
+        200:
+          description: List of storage groups.
+          schema:
+            $ref: '#/definitions/StorageGroupList'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
+  /containers/{containerId}/storagegroups/{storageGroupId}:
+    parameters:
+      - $ref: '#/parameters/containerId'
+      - $ref: '#/parameters/storageGroupId'
+    get:
+      operationId: getStorageGroup
+      summary: Get storage group info.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
+      responses:
+        200:
+          description: Storage group information.
+          schema:
+            $ref: '#/definitions/StorageGroup'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+    delete:
+      operationId: deleteStorageGroup
+      summary: Delete storage group from container.
+      parameters:
+        - $ref: '#/parameters/signatureParam'
+        - $ref: '#/parameters/signatureKeyParam'
+        - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
+      responses:
+        200:
+          description: Successful deletion.
+          schema:
+            $ref: '#/definitions/SuccessResponse'
+        400:
+          description: Bad request.
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+
 definitions:
   BinaryBearer:
     description: Bearer token for object operations that is represented in binary form.
@@ -1030,6 +1119,107 @@ definitions:
               value: myfile
           targets:
             - role: OTHERS
+  StorageGroupPutBody:
+    type: object
+    properties:
+      name:
+        description: Name of storage group. It will be the value of the `FileName` attribute in storage group object.
+        type: string
+      lifetime:
+        description: Lifetime in epochs for storage group.
+        type: integer
+      members:
+        description: Object identifiers to be placed into storage group. Must be unique.
+        type: array
+        items:
+          type: string
+    required:
+      - lifetime
+      - members
+    example:
+      name: my-storage-group
+      lifetime: 100
+      members:
+        - 8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+  StorageGroup:
+    description: Storage group keeps verification information for Data Audit sessions.
+    type: object
+    properties:
+      name:
+        description: Name of storage group. It will be the value of the `FileName` attribute in storage group object.
+        type: string
+      address:
+        description: Address of storage group object. Set by server.
+        readOnly: true
+        $ref: '#/definitions/Address'
+      expirationEpoch:
+        description: Expiration epoch of storage group.
+        type: string
+      hash:
+        description: Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.
+        type: string
+      size:
+        description: Total size of the payloads of objects in the storage group.
+        type: string
+      members:
+        description: Object identifiers to be placed into storage group. Must be unique.
+        type: array
+        items:
+          type: string
+    required:
+      - address
+      - expirationEpoch
+      - size
+      - members
+    example:
+      name: my-storage-group
+      address:
+        objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+        containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+      expirationEpoch: 5000
+      size: 4096
+      members:
+        - 8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+  StorageGroupBaseInfo:
+    description: Storage group info for listing.
+    type: object
+    properties:
+      name:
+        type: string
+      address:
+        $ref: '#/definitions/Address'
+      expirationEpoch:
+        type: string
+    required:
+      - address
+      - expirationEpoch
+    example:
+      name: my-storage-group
+      address:
+        objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+        containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+      expirationEpoch: 5000
+  StorageGroupList:
+    description: List of storage groups.
+    type: object
+    properties:
+      size:
+        type: integer
+      storageGroups:
+        type: array
+        items:
+          $ref: '#/definitions/StorageGroupBaseInfo'
+    required:
+      - size
+      - storageGroups
+    example:
+      size: 1
+      storageGroups:
+        - name: my-storage-group
+          address:
+            objectId: 9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd
+            containerId: 5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv
+          expirationEpoch: 5000
   Attribute:
     description: Attribute is a pair of strings that can be attached to a container or an object.
     type: object

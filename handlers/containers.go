@@ -413,6 +413,10 @@ func createContainer(ctx context.Context, p *pool.Pool, stoken session.Container
 		container.WriteDomain(&cnr, domain)
 	}
 
+	if err = pool.SyncContainerWithNetwork(ctx, &cnr, p); err != nil {
+		return cid.ID{}, fmt.Errorf("sync container with network: %w", err)
+	}
+
 	var prm pool.PrmContainerPut
 	prm.SetContainer(cnr)
 	prm.WithinSession(stoken)
