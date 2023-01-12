@@ -13,7 +13,6 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // NewDeleteStorageGroupParams creates a new DeleteStorageGroupParams object
@@ -23,10 +22,14 @@ func NewDeleteStorageGroupParams() DeleteStorageGroupParams {
 	var (
 		// initialize parameters with default values
 
+		fullBearerDefault = bool(false)
+
 		walletConnectDefault = bool(false)
 	)
 
 	return DeleteStorageGroupParams{
+		FullBearer: &fullBearerDefault,
+
 		WalletConnect: &walletConnectDefault,
 	}
 }
@@ -41,26 +44,29 @@ type DeleteStorageGroupParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*Base64 encoded signature for bearer token.
-	  Required: true
 	  In: header
 	*/
-	XBearerSignature string
+	XBearerSignature *string
 	/*Hex encoded the public part of the key that signed the bearer token.
-	  Required: true
 	  In: header
 	*/
-	XBearerSignatureKey string
+	XBearerSignatureKey *string
 	/*Base58 encoded container id.
 	  Required: true
 	  In: path
 	*/
 	ContainerID string
+	/*Provided bearer token is final or gate should assemble it using signature.
+	  In: query
+	  Default: false
+	*/
+	FullBearer *bool
 	/*Base58 encoded storage group id.
 	  Required: true
 	  In: path
 	*/
 	StorageGroupID string
-	/*Use wallet connect signature scheme or native NeoFS signature.
+	/*Use wallet connect signature scheme or native FrostFS signature.
 	  In: query
 	  Default: false
 	*/
@@ -91,6 +97,11 @@ func (o *DeleteStorageGroupParams) BindRequest(r *http.Request, route *middlewar
 		res = append(res, err)
 	}
 
+	qFullBearer, qhkFullBearer, _ := qs.GetOK("fullBearer")
+	if err := o.bindFullBearer(qFullBearer, qhkFullBearer, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	rStorageGroupID, rhkStorageGroupID, _ := route.Params.GetOK("storageGroupId")
 	if err := o.bindStorageGroupID(rStorageGroupID, rhkStorageGroupID, route.Formats); err != nil {
 		res = append(res, err)
@@ -108,40 +119,34 @@ func (o *DeleteStorageGroupParams) BindRequest(r *http.Request, route *middlewar
 
 // bindXBearerSignature binds and validates parameter XBearerSignature from header.
 func (o *DeleteStorageGroupParams) bindXBearerSignature(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("X-Bearer-Signature", "header", rawData)
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: true
+	// Required: false
 
-	if err := validate.RequiredString("X-Bearer-Signature", "header", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
-	o.XBearerSignature = raw
+	o.XBearerSignature = &raw
 
 	return nil
 }
 
 // bindXBearerSignatureKey binds and validates parameter XBearerSignatureKey from header.
 func (o *DeleteStorageGroupParams) bindXBearerSignatureKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("X-Bearer-Signature-Key", "header", rawData)
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: true
+	// Required: false
 
-	if err := validate.RequiredString("X-Bearer-Signature-Key", "header", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
-	o.XBearerSignatureKey = raw
+	o.XBearerSignatureKey = &raw
 
 	return nil
 }
@@ -156,6 +161,30 @@ func (o *DeleteStorageGroupParams) bindContainerID(rawData []string, hasKey bool
 	// Required: true
 	// Parameter is provided by construction from the route
 	o.ContainerID = raw
+
+	return nil
+}
+
+// bindFullBearer binds and validates parameter FullBearer from query.
+func (o *DeleteStorageGroupParams) bindFullBearer(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		// Default values have been previously initialized by NewDeleteStorageGroupParams()
+		return nil
+	}
+
+	value, err := swag.ConvertBool(raw)
+	if err != nil {
+		return errors.InvalidType("fullBearer", "query", "bool", raw)
+	}
+	o.FullBearer = &value
 
 	return nil
 }

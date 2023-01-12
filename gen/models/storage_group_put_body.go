@@ -15,6 +15,7 @@ import (
 )
 
 // StorageGroupPutBody storage group put body
+// Example: {"lifetime":100,"members":["8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"],"name":"my-storage-group"}
 //
 // swagger:model StorageGroupPutBody
 type StorageGroupPutBody struct {

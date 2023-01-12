@@ -4,7 +4,9 @@ go 1.17
 
 require (
 	github.com/TrueCloudLab/frostfs-api-go/v2 v2.0.0-20221212144048-1351b6656d68
+	github.com/TrueCloudLab/frostfs-crypto v0.5.0
 	github.com/TrueCloudLab/frostfs-sdk-go v0.0.0-20221214065929-4c779423f556
+	github.com/TrueCloudLab/tzhash v1.7.0
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/loads v0.21.1
 	github.com/go-openapi/runtime v0.23.3
@@ -27,10 +29,8 @@ require (
 	github.com/Microsoft/hcsshim v0.8.23 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/TrueCloudLab/frostfs-crypto v0.5.0
 	github.com/TrueCloudLab/hrw v1.1.0 // indirect
 	github.com/TrueCloudLab/rfc6979 v0.3.0 // indirect
-	github.com/TrueCloudLab/tzhash v1.7.0 // indirect
 	github.com/antlr/antlr4/runtime/Go/antlr v1.4.10 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/beorn7/perks v1.0.1 // indirect

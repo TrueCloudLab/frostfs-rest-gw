@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // PutStorageGroupOKCode is the HTTP code returned for type PutStorageGroupOK
 const PutStorageGroupOKCode int = 200
 
-/*PutStorageGroupOK Address of uploaded storage group.
+/*
+PutStorageGroupOK Address of uploaded storage group.
 
 swagger:response putStorageGroupOK
 */
@@ -60,7 +61,8 @@ func (o *PutStorageGroupOK) WriteResponse(rw http.ResponseWriter, producer runti
 // PutStorageGroupBadRequestCode is the HTTP code returned for type PutStorageGroupBadRequest
 const PutStorageGroupBadRequestCode int = 400
 
-/*PutStorageGroupBadRequest Bad request.
+/*
+PutStorageGroupBadRequest Bad request.
 
 swagger:response putStorageGroupBadRequest
 */

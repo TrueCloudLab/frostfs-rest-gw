@@ -536,6 +536,9 @@ func init() {
           },
           {
             "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
           }
         ],
         "responses": {
@@ -565,6 +568,9 @@ func init() {
           },
           {
             "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
           },
           {
             "description": "Storage group co create.",
@@ -610,6 +616,9 @@ func init() {
           },
           {
             "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
           }
         ],
         "responses": {
@@ -639,6 +648,9 @@ func init() {
           },
           {
             "$ref": "#/parameters/signatureScheme"
+          },
+          {
+            "$ref": "#/parameters/fullBearerToken"
           }
         ],
         "responses": {
@@ -1680,9 +1692,11 @@ func init() {
           "readOnly": true
         },
         "expirationEpoch": {
+          "description": "Expiration epoch of storage group.",
           "type": "string"
         },
         "hash": {
+          "description": "Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.",
           "type": "string"
         },
         "members": {
@@ -1697,8 +1711,21 @@ func init() {
           "type": "string"
         },
         "size": {
+          "description": "Total size of the payloads of objects in the storage group.",
           "type": "string"
         }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group",
+        "size": 4096
       }
     },
     "StorageGroupBaseInfo": {
@@ -1718,6 +1745,14 @@ func init() {
         "name": {
           "type": "string"
         }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "name": "my-storage-group"
       }
     },
     "StorageGroupList": {
@@ -1737,6 +1772,19 @@ func init() {
             "$ref": "#/definitions/StorageGroupBaseInfo"
           }
         }
+      },
+      "example": {
+        "size": 1,
+        "storageGroups": [
+          {
+            "address": {
+              "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+              "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+            },
+            "expirationEpoch": 5000,
+            "name": "my-storage-group"
+          }
+        ]
       }
     },
     "StorageGroupPutBody": {
@@ -1761,6 +1809,13 @@ func init() {
           "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
           "type": "string"
         }
+      },
+      "example": {
+        "lifetime": 100,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group"
       }
     },
     "SuccessResponse": {
@@ -2477,21 +2532,26 @@ func init() {
             "type": "string",
             "description": "Base64 encoded signature for bearer token.",
             "name": "X-Bearer-Signature",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "string",
             "description": "Hex encoded the public part of the key that signed the bearer token.",
             "name": "X-Bearer-Signature-Key",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
             "in": "query"
           }
         ],
@@ -2518,21 +2578,26 @@ func init() {
             "type": "string",
             "description": "Base64 encoded signature for bearer token.",
             "name": "X-Bearer-Signature",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "string",
             "description": "Hex encoded the public part of the key that signed the bearer token.",
             "name": "X-Bearer-Signature-Key",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
             "in": "query"
           },
           {
@@ -2579,21 +2644,26 @@ func init() {
             "type": "string",
             "description": "Base64 encoded signature for bearer token.",
             "name": "X-Bearer-Signature",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "string",
             "description": "Hex encoded the public part of the key that signed the bearer token.",
             "name": "X-Bearer-Signature-Key",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
             "in": "query"
           }
         ],
@@ -2620,21 +2690,26 @@ func init() {
             "type": "string",
             "description": "Base64 encoded signature for bearer token.",
             "name": "X-Bearer-Signature",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "string",
             "description": "Hex encoded the public part of the key that signed the bearer token.",
             "name": "X-Bearer-Signature-Key",
-            "in": "header",
-            "required": true
+            "in": "header"
           },
           {
             "type": "boolean",
             "default": false,
-            "description": "Use wallet connect signature scheme or native NeoFS signature.",
+            "description": "Use wallet connect signature scheme or native FrostFS signature.",
             "name": "walletConnect",
+            "in": "query"
+          },
+          {
+            "type": "boolean",
+            "default": false,
+            "description": "Provided bearer token is final or gate should assemble it using signature.",
+            "name": "fullBearer",
             "in": "query"
           }
         ],
@@ -3756,9 +3831,11 @@ func init() {
           "readOnly": true
         },
         "expirationEpoch": {
+          "description": "Expiration epoch of storage group.",
           "type": "string"
         },
         "hash": {
+          "description": "Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.",
           "type": "string"
         },
         "members": {
@@ -3773,8 +3850,21 @@ func init() {
           "type": "string"
         },
         "size": {
+          "description": "Total size of the payloads of objects in the storage group.",
           "type": "string"
         }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group",
+        "size": 4096
       }
     },
     "StorageGroupBaseInfo": {
@@ -3794,6 +3884,14 @@ func init() {
         "name": {
           "type": "string"
         }
+      },
+      "example": {
+        "address": {
+          "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+          "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        },
+        "expirationEpoch": 5000,
+        "name": "my-storage-group"
       }
     },
     "StorageGroupList": {
@@ -3813,6 +3911,19 @@ func init() {
             "$ref": "#/definitions/StorageGroupBaseInfo"
           }
         }
+      },
+      "example": {
+        "size": 1,
+        "storageGroups": [
+          {
+            "address": {
+              "containerId": "5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv",
+              "objectId": "9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+            },
+            "expirationEpoch": 5000,
+            "name": "my-storage-group"
+          }
+        ]
       }
     },
     "StorageGroupPutBody": {
@@ -3837,6 +3948,13 @@ func init() {
           "description": "Name of storage group. It will be the value of the ` + "`" + `FileName` + "`" + ` attribute in storage group object.",
           "type": "string"
         }
+      },
+      "example": {
+        "lifetime": 100,
+        "members": [
+          "8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"
+        ],
+        "name": "my-storage-group"
       }
     },
     "SuccessResponse": {

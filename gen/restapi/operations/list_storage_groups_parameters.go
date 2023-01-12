@@ -13,7 +13,6 @@ import (
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // NewListStorageGroupsParams creates a new ListStorageGroupsParams object
@@ -23,10 +22,13 @@ func NewListStorageGroupsParams() ListStorageGroupsParams {
 	var (
 		// initialize parameters with default values
 
+		fullBearerDefault    = bool(false)
 		walletConnectDefault = bool(false)
 	)
 
 	return ListStorageGroupsParams{
+		FullBearer: &fullBearerDefault,
+
 		WalletConnect: &walletConnectDefault,
 	}
 }
@@ -41,21 +43,24 @@ type ListStorageGroupsParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*Base64 encoded signature for bearer token.
-	  Required: true
 	  In: header
 	*/
-	XBearerSignature string
+	XBearerSignature *string
 	/*Hex encoded the public part of the key that signed the bearer token.
-	  Required: true
 	  In: header
 	*/
-	XBearerSignatureKey string
+	XBearerSignatureKey *string
 	/*Base58 encoded container id.
 	  Required: true
 	  In: path
 	*/
 	ContainerID string
-	/*Use wallet connect signature scheme or native NeoFS signature.
+	/*Provided bearer token is final or gate should assemble it using signature.
+	  In: query
+	  Default: false
+	*/
+	FullBearer *bool
+	/*Use wallet connect signature scheme or native FrostFS signature.
 	  In: query
 	  Default: false
 	*/
@@ -86,6 +91,11 @@ func (o *ListStorageGroupsParams) BindRequest(r *http.Request, route *middleware
 		res = append(res, err)
 	}
 
+	qFullBearer, qhkFullBearer, _ := qs.GetOK("fullBearer")
+	if err := o.bindFullBearer(qFullBearer, qhkFullBearer, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qWalletConnect, qhkWalletConnect, _ := qs.GetOK("walletConnect")
 	if err := o.bindWalletConnect(qWalletConnect, qhkWalletConnect, route.Formats); err != nil {
 		res = append(res, err)
@@ -98,40 +108,34 @@ func (o *ListStorageGroupsParams) BindRequest(r *http.Request, route *middleware
 
 // bindXBearerSignature binds and validates parameter XBearerSignature from header.
 func (o *ListStorageGroupsParams) bindXBearerSignature(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("X-Bearer-Signature", "header", rawData)
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: true
+	// Required: false
 
-	if err := validate.RequiredString("X-Bearer-Signature", "header", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
-	o.XBearerSignature = raw
+	o.XBearerSignature = &raw
 
 	return nil
 }
 
 // bindXBearerSignatureKey binds and validates parameter XBearerSignatureKey from header.
 func (o *ListStorageGroupsParams) bindXBearerSignatureKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("X-Bearer-Signature-Key", "header", rawData)
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
 
-	// Required: true
+	// Required: false
 
-	if err := validate.RequiredString("X-Bearer-Signature-Key", "header", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
-	o.XBearerSignatureKey = raw
+	o.XBearerSignatureKey = &raw
 
 	return nil
 }
@@ -146,6 +150,30 @@ func (o *ListStorageGroupsParams) bindContainerID(rawData []string, hasKey bool,
 	// Required: true
 	// Parameter is provided by construction from the route
 	o.ContainerID = raw
+
+	return nil
+}
+
+// bindFullBearer binds and validates parameter FullBearer from query.
+func (o *ListStorageGroupsParams) bindFullBearer(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+
+	if raw == "" { // empty values pass all other validations
+		// Default values have been previously initialized by NewListStorageGroupsParams()
+		return nil
+	}
+
+	value, err := swag.ConvertBool(raw)
+	if err != nil {
+		return errors.InvalidType("fullBearer", "query", "bool", raw)
+	}
+	o.FullBearer = &value
 
 	return nil
 }

@@ -15,6 +15,7 @@ import (
 )
 
 // StorageGroup Storage group keeps verification information for Data Audit sessions.
+// Example: {"address":{"containerId":"5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv","objectId":"9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"},"expirationEpoch":5000,"members":["8N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"],"name":"my-storage-group","size":4096}
 //
 // swagger:model StorageGroup
 type StorageGroup struct {
@@ -24,11 +25,11 @@ type StorageGroup struct {
 	// Read Only: true
 	Address *Address `json:"address"`
 
-	// expiration epoch
+	// Expiration epoch of storage group.
 	// Required: true
 	ExpirationEpoch *string `json:"expirationEpoch"`
 
-	// hash
+	// Homomorphic hash from the concatenation of the payloads of the storage group members. Empty means hashing is disabled.
 	Hash string `json:"hash,omitempty"`
 
 	// Object identifiers to be placed into storage group. Must be unique.
@@ -38,7 +39,7 @@ type StorageGroup struct {
 	// Name of storage group. It will be the value of the `FileName` attribute in storage group object.
 	Name string `json:"name,omitempty"`
 
-	// size
+	// Total size of the payloads of objects in the storage group.
 	// Required: true
 	Size *string `json:"size"`
 }

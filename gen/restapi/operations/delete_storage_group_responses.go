@@ -10,13 +10,14 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // DeleteStorageGroupOKCode is the HTTP code returned for type DeleteStorageGroupOK
 const DeleteStorageGroupOKCode int = 200
 
-/*DeleteStorageGroupOK Successful deletion.
+/*
+DeleteStorageGroupOK Successful deletion.
 
 swagger:response deleteStorageGroupOK
 */
@@ -60,7 +61,8 @@ func (o *DeleteStorageGroupOK) WriteResponse(rw http.ResponseWriter, producer ru
 // DeleteStorageGroupBadRequestCode is the HTTP code returned for type DeleteStorageGroupBadRequest
 const DeleteStorageGroupBadRequestCode int = 400
 
-/*DeleteStorageGroupBadRequest Bad request.
+/*
+DeleteStorageGroupBadRequest Bad request.
 
 swagger:response deleteStorageGroupBadRequest
 */

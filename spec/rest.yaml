@@ -573,6 +573,7 @@ paths:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
         - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
         - in: body
           name: storageGroup
           required: true
@@ -595,6 +596,7 @@ paths:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
         - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
       responses:
         200:
           description: List of storage groups.
@@ -616,6 +618,7 @@ paths:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
         - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
       responses:
         200:
           description: Storage group information.
@@ -632,6 +635,7 @@ paths:
         - $ref: '#/parameters/signatureParam'
         - $ref: '#/parameters/signatureKeyParam'
         - $ref: '#/parameters/signatureScheme'
+        - $ref: '#/parameters/fullBearerToken'
       responses:
         200:
           description: Successful deletion.

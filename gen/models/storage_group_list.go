@@ -16,6 +16,7 @@ import (
 )
 
 // StorageGroupList List of storage groups.
+// Example: {"size":1,"storageGroups":[{"address":{"containerId":"5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv","objectId":"9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"},"expirationEpoch":5000,"name":"my-storage-group"}]}
 //
 // swagger:model StorageGroupList
 type StorageGroupList struct {

@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // DeleteStorageGroupHandlerFunc turns a function with the right signature into a delete storage group handler
@@ -31,10 +31,10 @@ func NewDeleteStorageGroup(ctx *middleware.Context, handler DeleteStorageGroupHa
 	return &DeleteStorageGroup{Context: ctx, Handler: handler}
 }
 
-/* DeleteStorageGroup swagger:route DELETE /containers/{containerId}/storagegroups/{storageGroupId} deleteStorageGroup
+/*
+	DeleteStorageGroup swagger:route DELETE /containers/{containerId}/storagegroups/{storageGroupId} deleteStorageGroup
 
 Delete storage group from container.
-
 */
 type DeleteStorageGroup struct {
 	Context *middleware.Context

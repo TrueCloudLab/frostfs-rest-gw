@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // GetStorageGroupHandlerFunc turns a function with the right signature into a get storage group handler
@@ -31,10 +31,10 @@ func NewGetStorageGroup(ctx *middleware.Context, handler GetStorageGroupHandler)
 	return &GetStorageGroup{Context: ctx, Handler: handler}
 }
 
-/* GetStorageGroup swagger:route GET /containers/{containerId}/storagegroups/{storageGroupId} getStorageGroup
+/*
+	GetStorageGroup swagger:route GET /containers/{containerId}/storagegroups/{storageGroupId} getStorageGroup
 
 Get storage group info.
-
 */
 type GetStorageGroup struct {
 	Context *middleware.Context

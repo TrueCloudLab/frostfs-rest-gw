@@ -15,6 +15,7 @@ import (
 )
 
 // StorageGroupBaseInfo Storage group info for listing.
+// Example: {"address":{"containerId":"5HZTn5qkRnmgSz9gSrw22CEdPPk6nQhkwf2Mgzyvkikv","objectId":"9N3o7Dtr6T1xteCt6eRwhpmJ7JhME58Hyu1dvaswuTDd"},"expirationEpoch":5000,"name":"my-storage-group"}
 //
 // swagger:model StorageGroupBaseInfo
 type StorageGroupBaseInfo struct {

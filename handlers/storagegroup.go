@@ -8,20 +8,20 @@ import (
 	"io"
 	"strconv"
 
+	objectv2 "github.com/TrueCloudLab/frostfs-api-go/v2/object"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/restapi/operations"
+	"github.com/TrueCloudLab/frostfs-rest-gw/internal/util"
+	"github.com/TrueCloudLab/frostfs-sdk-go/bearer"
+	"github.com/TrueCloudLab/frostfs-sdk-go/checksum"
+	"github.com/TrueCloudLab/frostfs-sdk-go/container"
+	cid "github.com/TrueCloudLab/frostfs-sdk-go/container/id"
+	"github.com/TrueCloudLab/frostfs-sdk-go/object"
+	oid "github.com/TrueCloudLab/frostfs-sdk-go/object/id"
+	"github.com/TrueCloudLab/frostfs-sdk-go/pool"
+	"github.com/TrueCloudLab/frostfs-sdk-go/storagegroup"
+	"github.com/TrueCloudLab/tzhash/tz"
 	"github.com/go-openapi/runtime/middleware"
-	objectv2 "github.com/nspcc-dev/neofs-api-go/v2/object"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
-	"github.com/nspcc-dev/neofs-rest-gw/gen/restapi/operations"
-	"github.com/nspcc-dev/neofs-rest-gw/internal/util"
-	"github.com/nspcc-dev/neofs-sdk-go/bearer"
-	"github.com/nspcc-dev/neofs-sdk-go/checksum"
-	"github.com/nspcc-dev/neofs-sdk-go/container"
-	cid "github.com/nspcc-dev/neofs-sdk-go/container/id"
-	"github.com/nspcc-dev/neofs-sdk-go/object"
-	oid "github.com/nspcc-dev/neofs-sdk-go/object/id"
-	"github.com/nspcc-dev/neofs-sdk-go/pool"
-	"github.com/nspcc-dev/neofs-sdk-go/storagegroup"
-	"github.com/nspcc-dev/tzhash/tz"
 )
 
 // PutStorageGroup handler that create a new storage group.
@@ -34,7 +34,7 @@ func (a *API) PutStorageGroup(params operations.PutStorageGroupParams, principal
 		return operations.NewPutStorageGroupBadRequest().WithPayload(resp)
 	}
 
-	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect, *params.FullBearer)
 	if err != nil {
 		resp := a.logAndGetErrorResponse("invalid bearer token", err)
 		return operations.NewPutStorageGroupBadRequest().WithPayload(resp)
@@ -69,7 +69,7 @@ func (a *API) ListStorageGroups(params operations.ListStorageGroupsParams, princ
 		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
 	}
 
-	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect, *params.FullBearer)
 	if err != nil {
 		resp := a.logAndGetErrorResponse("invalid bearer token", err)
 		return operations.NewListStorageGroupsBadRequest().WithPayload(resp)
@@ -80,7 +80,7 @@ func (a *API) ListStorageGroups(params operations.ListStorageGroupsParams, princ
 
 	var prm pool.PrmObjectSearch
 	prm.SetContainerID(cnrID)
-	prm.UseBearer(btoken)
+	attachBearer(&prm, btoken)
 	prm.SetFilters(filters)
 
 	resSearch, err := a.pool.SearchObjects(ctx, prm)
@@ -117,14 +117,14 @@ func (a *API) ListStorageGroups(params operations.ListStorageGroupsParams, princ
 	return operations.NewListStorageGroupsOK().WithPayload(resp)
 }
 
-func headObjectStorageGroupBaseInfo(ctx context.Context, p *pool.Pool, cnrID cid.ID, objID oid.ID, btoken bearer.Token) (*models.StorageGroupBaseInfo, error) {
+func headObjectStorageGroupBaseInfo(ctx context.Context, p *pool.Pool, cnrID cid.ID, objID oid.ID, btoken *bearer.Token) (*models.StorageGroupBaseInfo, error) {
 	var addr oid.Address
 	addr.SetContainer(cnrID)
 	addr.SetObject(objID)
 
 	var prm pool.PrmObjectHead
 	prm.SetAddress(addr)
-	prm.UseBearer(btoken)
+	attachBearer(&prm, btoken)
 
 	objInfo, err := p.HeadObject(ctx, prm)
 	if err != nil {
@@ -166,7 +166,7 @@ func (a *API) DeleteStorageGroup(params operations.DeleteStorageGroupParams, pri
 		return operations.NewDeleteStorageGroupBadRequest().WithPayload(resp)
 	}
 
-	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect, *params.FullBearer)
 	if err != nil {
 		resp := a.logAndGetErrorResponse("failed to get bearer token", err)
 		return operations.NewDeleteStorageGroupBadRequest().WithPayload(resp)
@@ -174,7 +174,7 @@ func (a *API) DeleteStorageGroup(params operations.DeleteStorageGroupParams, pri
 
 	var prm pool.PrmObjectDelete
 	prm.SetAddress(addr)
-	prm.UseBearer(btoken)
+	attachBearer(&prm, btoken)
 
 	if err = a.pool.DeleteObject(ctx, prm); err != nil {
 		resp := a.logAndGetErrorResponse("failed to delete storage group", err)
@@ -195,7 +195,7 @@ func (a *API) GetStorageGroup(params operations.GetStorageGroupParams, principal
 		return errorResponse.WithPayload(resp)
 	}
 
-	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect)
+	btoken, err := getBearerToken(principal, params.XBearerSignature, params.XBearerSignatureKey, *params.WalletConnect, *params.FullBearer)
 	if err != nil {
 		resp := a.logAndGetErrorResponse("get bearer token", err)
 		return errorResponse.WithPayload(resp)
@@ -203,7 +203,7 @@ func (a *API) GetStorageGroup(params operations.GetStorageGroupParams, principal
 
 	var prm pool.PrmObjectGet
 	prm.SetAddress(addr)
-	prm.UseBearer(btoken)
+	attachBearer(&prm, btoken)
 
 	objRes, err := a.pool.GetObject(ctx, prm)
 	if err != nil {
@@ -252,7 +252,7 @@ func getStorageGroupName(obj object.Object) string {
 	return ""
 }
 
-func (a *API) readStorageGroup(objRes *pool.ResGetObject) (*storagegroup.StorageGroup, error) {
+func (a *API) readStorageGroup(objRes pool.ResGetObject) (*storagegroup.StorageGroup, error) {
 	buf := bytes.NewBuffer(nil)
 	if _, err := io.Copy(buf, objRes.Payload); err != nil {
 		return nil, fmt.Errorf("failed to copy storage group payload: %w", err)
@@ -269,7 +269,7 @@ func (a *API) readStorageGroup(objRes *pool.ResGetObject) (*storagegroup.Storage
 	return &sb, nil
 }
 
-func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.Token, storageGroup *models.StorageGroupPutBody) (*storagegroup.StorageGroup, error) {
+func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken *bearer.Token, storageGroup *models.StorageGroupPutBody) (*storagegroup.StorageGroup, error) {
 	members, err := a.parseStorageGroupMembers(storageGroup)
 	if err != nil {
 		return nil, fmt.Errorf("parse storage group members: %w", err)
@@ -302,33 +302,31 @@ func (a *API) formStorageGroup(ctx context.Context, cnrID cid.ID, btoken bearer.
 	return &sg, nil
 }
 
-func (a *API) putStorageGroupObject(ctx context.Context, cnrID cid.ID, btoken bearer.Token, fileName string, sg storagegroup.StorageGroup) (*oid.ID, error) {
-	owner := bearer.ResolveIssuer(btoken)
-
+func (a *API) putStorageGroupObject(ctx context.Context, cnrID cid.ID, btoken *bearer.Token, fileName string, sg storagegroup.StorageGroup) (*oid.ID, error) {
 	var attrFileName object.Attribute
 	attrFileName.SetKey(object.AttributeFileName)
 	attrFileName.SetValue(fileName)
 
 	obj := object.New()
 	obj.SetContainerID(cnrID)
-	obj.SetOwnerID(&owner)
+	attachOwner(obj, btoken)
 	obj.SetAttributes(attrFileName)
 
 	storagegroup.WriteToObject(sg, obj)
 
 	var prmPut pool.PrmObjectPut
 	prmPut.SetHeader(*obj)
-	prmPut.UseBearer(btoken)
+	attachBearer(&prmPut, btoken)
 
 	objID, err := a.pool.PutObject(ctx, prmPut)
 	if err != nil {
 		return nil, fmt.Errorf("put object: %w", err)
 	}
 
-	return objID, nil
+	return &objID, nil
 }
 
-func (a *API) getStorageGroupSizeAndHash(ctx context.Context, cnrID cid.ID, btoken bearer.Token, members []oid.ID, needCalcHash bool) (uint64, *checksum.Checksum, error) {
+func (a *API) getStorageGroupSizeAndHash(ctx context.Context, cnrID cid.ID, btoken *bearer.Token, members []oid.ID, needCalcHash bool) (uint64, *checksum.Checksum, error) {
 	var (
 		sgSize    uint64
 		objHashes [][]byte
@@ -337,7 +335,7 @@ func (a *API) getStorageGroupSizeAndHash(ctx context.Context, cnrID cid.ID, btok
 	)
 
 	addr.SetContainer(cnrID)
-	prm.UseBearer(btoken)
+	attachBearer(&prm, btoken)
 
 	for _, objID := range members {
 		addr.SetObject(objID)
@@ -401,5 +399,5 @@ func isHomomorphicHashingDisabled(ctx context.Context, p *pool.Pool, cnrID cid.I
 		return false, fmt.Errorf("get container: %w", err)
 	}
 
-	return container.IsHomomorphicHashingDisabled(*cnr), nil
+	return container.IsHomomorphicHashingDisabled(cnr), nil
 }

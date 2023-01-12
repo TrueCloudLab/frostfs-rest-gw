@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime/middleware"
 
-	"github.com/nspcc-dev/neofs-rest-gw/gen/models"
+	"github.com/TrueCloudLab/frostfs-rest-gw/gen/models"
 )
 
 // PutStorageGroupHandlerFunc turns a function with the right signature into a put storage group handler
@@ -31,10 +31,10 @@ func NewPutStorageGroup(ctx *middleware.Context, handler PutStorageGroupHandler)
 	return &PutStorageGroup{Context: ctx, Handler: handler}
 }
 
-/* PutStorageGroup swagger:route PUT /containers/{containerId}/storagegroups putStorageGroup
+/*
+	PutStorageGroup swagger:route PUT /containers/{containerId}/storagegroups putStorageGroup
 
 Create a new storage group in container.
-
 */
 type PutStorageGroup struct {
 	Context *middleware.Context
